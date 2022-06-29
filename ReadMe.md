@@ -4,6 +4,10 @@ Twilio Flex Plugins allow you to customize the appearance and behavior of [Twili
 
 ## How it works
 
+The _Agent DID Extensions Plugin_ allows customers to call a Flex agent directly with the help of an extension. It also enables supervisors to create, read, update, and delete agent extensions assigned to agents directly in the Flex UI.
+
+<img width="700px" src="./screenshots/agent-did-extensions-flexui.png"/>
+
 TODO: Features and functionality
 
 #### Example of Sync Map JSON structure
@@ -21,6 +25,26 @@ TODO: Features and functionality
 The below architectural diagram is a representation of involved Twilio services when a customer makes a call and enters agent's extension:
 
 <img width="700px" src="./screenshots/Agent-DID-Extensions.png"/>
+
+## TaskRouter Workflow setup
+
+Before using this plugin you must first create a dedicated TaskRouter workflow or just add the following filter to your current workflow. Make sure it is part of your Flex Task Assignment workspace.
+
+- set the "Known router" to Worker SID
+- ensure the following matching worker expression: task.workerSID
+- set up fallback options as you see fit
+
+<img width="700px" src="./screenshots/task-router.png"/>
+
+## StudioFlow setup
+
+There's a lot of flexibility how the StudioFlow can be configured, but the following steps should be included:
+
+- gather input digits entered by the caller
+- pass the input digits to a serverless function
+  <img width="700px" src="./screenshots/capture-input.png"/>
+- pass the `workerSID` to Flex
+  <img width="700px" src="./screenshots/pass-to-flex.png"/>
 
 ## Things to think about
 
@@ -45,6 +69,14 @@ Right now, all of the Sync map items are listed on the single page which makes f
 #### Extension validation
 
 Agent extensions should have 1:1 mapping between agents. At the moment, the plugin does not have validation to prevent the user from entering duplicate records into the Sync Map item.
+
+#### Sorting
+
+Implement sorting of the existing records in the UI.
+
+#### Automatically query agent info and map worker SIDs
+
+At the moment, the supervisor would have to manually update every field in the UI that is mapped to the Sync Map JSON. Next step for this plugin is to use Live Query to pull agent info and to programmatically pass worker SID information to Sync Map.
 
 ## Development
 
