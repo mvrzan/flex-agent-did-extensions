@@ -65,4 +65,14 @@ appConfig.js
 pluginsService.js
 build/
 
+# NPM-related items
+.twiliodeployinfo
+package-lock.json
+.twilioserverlessrc
+.nvmrc
+
+# Prettier config
+.prettierrc
+
+# macOs file
 .DS_Store
