@@ -56,22 +56,8 @@ class NewExtensionSidePanel extends Component {
       workerSid: workerSid,
     };
 
-    // check if extension already exists
-    const getSyncMapItems = await SyncHelper.getMapItems(
-      process.env.REACT_APP_SYNC_MAP_NAME
-    );
+    // TODO: check if extension already exists
 
-    //TODO: handle existing extensions
-    const findExt = getSyncMapItems.find(mapItem => {
-      if (agentExtension === mapItem.item.value.extensionNumber) {
-        console.log(`Extension number ${agentExtension} already exists`);
-        Notifications.showNotification('extensionAlreadyExists', {
-          errorString: agentExtension,
-        });
-      }
-    });
-
-    // await SyncHelper.addMapItem(mapName, key, mapValue);
     await SyncHelper.updateMapItem(mapName, mapKey, mapValue);
     Notifications.showNotification('extensionUpdatedSuccessfully');
 

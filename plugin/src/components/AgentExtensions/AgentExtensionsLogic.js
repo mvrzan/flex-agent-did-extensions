@@ -32,17 +32,18 @@ class AgentExtensionsLogic extends Component {
   }
 
   showModal = () => {
-    this.setState({ show: true });
-    this.setState({ showNewExtButton: false });
+    this.setState({ show: true, showNewExtButton: false });
   };
 
   hideModal = () => {
-    this.setState({ show: false });
-    this.setState({ showNewExtButton: true });
-    this.setState({ agentName: '' });
-    this.setState({ agentExt: '' });
-    this.setState({ workerSid: '' });
-    this.setState({ mapKey: '' });
+    this.setState({
+      show: false,
+      showNewExtButton: true,
+      agentName: '',
+      agentExt: '',
+      workerSid: '',
+      mapKey: '',
+    });
   };
 
   mapItemStateUpdate = async () => {
@@ -53,8 +54,7 @@ class AgentExtensionsLogic extends Component {
     if (getSyncMapItems.length === 0) {
       console.warn('Sync Map is empty.');
 
-      this.setState({ syncEmpty: true });
-      this.setState({ showLoadingScreen: false });
+      this.setState({ syncEmpty: true, showLoadingScreen: false });
       return;
     }
 
@@ -65,8 +65,10 @@ class AgentExtensionsLogic extends Component {
       return newObject;
     });
 
-    this.setState({ mapItems: formattedSyncMapItems });
-    this.setState({ showLoadingScreen: false });
+    this.setState({
+      mapItems: formattedSyncMapItems,
+      showLoadingScreen: false,
+    });
   };
 
   deleteSyncMapItem = async mapKey => {
@@ -81,18 +83,14 @@ class AgentExtensionsLogic extends Component {
     if (getSyncMapItems.length === 0) {
       console.warn('Sync Map is empty.');
 
-      this.setState({ syncEmpty: true });
-      this.setState({ mapItems: [] });
+      this.setState({ syncEmpty: true, mapItems: [] });
     }
 
     this.componentDidMount();
   };
 
   updateMapItem = (agentName, agentExt, workerSid, mapKey) => {
-    this.setState({ agentName: agentName });
-    this.setState({ agentExt: agentExt });
-    this.setState({ workerSid: workerSid });
-    this.setState({ mapKey: mapKey });
+    this.setState({ agentName, agentExt, workerSid, mapKey });
     this.showModal();
   };
 

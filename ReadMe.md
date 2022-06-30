@@ -6,9 +6,21 @@ Twilio Flex Plugins allow you to customize the appearance and behavior of [Twili
 
 The _Agent DID Extensions Plugin_ allows customers to call a Flex agent directly with the help of an extension. It also enables supervisors to create, read, update, and delete agent extensions assigned to agents directly in the Flex UI.
 
+Read agent extensions from the Sync Map.
+
 <img width="700px" src="./screenshots/agent-did-extensions-flexui.png"/>
 
-TODO: Features and functionality
+Create a new agent extensions directly into the Sync Map.
+
+![](./screenshots/add-extension.gif)
+
+Update an existing agent extension.
+
+![](./screenshots/update-extension.gif)
+
+Delete an existing agent extension.
+
+![](./screenshots/delete-extension.gif)
 
 #### Example of Sync Map JSON structure
 
