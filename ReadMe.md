@@ -1,3 +1,7 @@
+<a  href="https://www.twilio.com">
+<img  src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg"  alt="Twilio"  width="250"  />
+</a>
+
 # Agent DID Extensions Plugin
 
 Twilio Flex Plugins allow you to customize the appearance and behavior of [Twilio Flex](https://www.twilio.com/flex). If you want to learn more about the capabilities and how to use the API, check out our [Flex documentation](https://www.twilio.com/docs/flex).
@@ -265,4 +269,4 @@ To deploy your plugin to specific accounts/environments use these commands:
 
 ## Disclaimer
 
-No warranty expressed or implied. Software is as is.
+This software is to be considered "sample code", a Type B Deliverable, and is delivered "as-is" to the user. Twilio bears no responsibility to support the use or implementation of this software.
