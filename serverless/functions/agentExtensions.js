@@ -5,7 +5,6 @@ exports.handler = async function (context, event, callback) {
   const syncMapSid = context.TWILIO_SYNC_MAP_SID;
   const client = context.getTwilioClient();
   response.appendHeader('Content-Type', 'application/json');
-  response.setBody({ workerSID: extensionNumber.data.workerSid });
 
   try {
     const syncMap = await client.sync
@@ -14,6 +13,7 @@ exports.handler = async function (context, event, callback) {
       .syncMapItems.list();
 
     const extensionNumber = syncMap.find(syncMapItem => syncMapItem);
+    response.setBody({ workerSID: extensionNumber.data.workerSid });
 
     if (agentExt === extensionNumber.data.extensionNumber) {
       console.log(`Found a match!`);
