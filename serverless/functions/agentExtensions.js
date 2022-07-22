@@ -12,7 +12,7 @@ exports.handler = async function (context, event, callback) {
       .syncMaps(syncMapSid)
       .syncMapItems.list();
 
-    const extensionNumber = syncMap.find(syncMapItem => syncMapItem);
+    const extensionNumber = syncMap.find(syncMapItem => syncMapItem.data.extensionNumber === agentExt);
     response.setBody({ workerSID: extensionNumber.data.workerSid });
 
     if (agentExt === extensionNumber.data.extensionNumber) {
