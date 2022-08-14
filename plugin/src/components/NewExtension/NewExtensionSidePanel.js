@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core';
 import { Button, SidePanel } from '@twilio/flex-ui-core';
 import { Notifications } from '@twilio/flex-ui';
+import { Manager } from '@twilio/flex-ui';
 import {
   Container,
   AttributeTableCell,
@@ -16,6 +17,13 @@ import {
   ButtonsContainer,
 } from './NewExtension.styles';
 import SyncHelper from '../utils/syncUtil';
+
+import FormControl from '@material-ui/core/FormControl';
+import Select from 'react-select';
+import { debounce } from 'lodash';
+import InputLabel from '@material-ui/core/InputLabel';
+
+const SYNC_CLIENT = Manager.getInstance();
 
 class NewExtensionSidePanel extends Component {
   constructor(props) {
@@ -26,10 +34,28 @@ class NewExtensionSidePanel extends Component {
       workerSid: '',
       changed: false,
       stateAgentName: this.props.agentName,
+      workerList: [],
+      selectedWorker: null,
+      inputText: '',
     };
+  }
+  async componentDidMount() {
+    this.setWorkers();
   }
 
   handleChange = e => {
+    // use instantQuery to get a list of workers
+    // SYNC_CLIENT.insightsClient.instantQuery('tr-worker').then(q => {
+    //   q.on('searchResult', items => {
+    //     Object.entries(items).forEach(([key, value]) => {
+    //       console.log('Search result item key:', key);
+    //       console.log('Search result item value:', value);
+    //     });
+    //   });
+    //   q.search('');
+    // });
+
+    console.log('real event', e);
     const value = e.target.value;
     //Text Field id needs to match State property
     const id = e.target.id;
@@ -37,6 +63,64 @@ class NewExtensionSidePanel extends Component {
     newState[id] = value;
     this.setState(newState);
   };
+
+  setWorkers = (query = '') => {
+    const { contact_uri: worker_contact_uri } =
+      SYNC_CLIENT.workerClient.attributes;
+
+    SYNC_CLIENT.insightsClient.instantQuery('tr-worker').then(q => {
+      q.on('searchResult', items => {
+        console.log(items);
+        this.setState({
+          workerList: Object.keys(items).map(workerSid => items[workerSid]),
+        });
+      });
+
+      q.search(`${query !== '' ? `${query}` : ''}`);
+    });
+  };
+
+  handleInputChange = event => {
+    console.log('handleInputChange', event);
+    console.log('handleInputChange', this.state.inputText);
+    this.setState({ inputText: event });
+    this.handleWorkersListUpdate(event);
+    console.log('handleInputChange', this.state.inputText);
+
+    if (event !== '') {
+      this.setState({ selectedWorker: null });
+    }
+  };
+
+  handleChangeQuery = event => {
+    console.log('hey');
+    const value = event.label;
+    console.log(this.state.agentName);
+    // //Text Field id needs to match State property
+    // const id = event.target.id;
+    // let newState = { changed: true };
+    // newState[agentName] = value;
+    this.setState({ agentName: value });
+    this.setState({ selectedWorker: event });
+    console.log(this.state.agentName);
+  };
+
+  handleOnFocus = () => {
+    console.log('handleOnFocus');
+    if (this.state.inputText === '' && this.state.workerList.length === 0) {
+      this.setWorkers();
+    }
+  };
+
+  handleWorkersListUpdate = debounce(
+    e => {
+      if (e) {
+        this.setWorkers(`data.attributes.full_name CONTAINS "${e}"`);
+      }
+    },
+    250,
+    { maxWait: 1000 }
+  );
 
   saveMapItem = async () => {
     const mapName = process.env.REACT_APP_SYNC_MAP_NAME;
@@ -54,6 +138,7 @@ class NewExtensionSidePanel extends Component {
       workerFullName: agentName,
       extensionNumber: agentExtension,
       workerSid: workerSid,
+      // testWorkerName: this.state.inputText, // added this to use for the button change
     };
 
     // TODO: check if extension already exists
@@ -69,6 +154,17 @@ class NewExtensionSidePanel extends Component {
   };
 
   render() {
+    const workers = this.state.workerList
+      .map(worker => {
+        const { contact_uri, full_name } = worker.attributes;
+
+        return { label: full_name, value: contact_uri };
+        // return activity_name !== 'Offline'
+        //   ? { label: full_name, value: contact_uri }
+        //   : null;
+      })
+      .filter(elem => elem);
+
     return (
       <SidePanel
         displayName="New Agent Extension"
@@ -89,14 +185,20 @@ class NewExtensionSidePanel extends Component {
                   <AttributeName>Agent Name</AttributeName>
                 </AttributeTableCell>
                 <TableCell>
-                  <AttributeTextField
-                    id="agentName"
-                    value={this.agentName}
-                    defaultValue={this.props.agentName}
-                    onChange={this.handleChange}
-                    onClick={this.handleChange}
-                    error={this.state.agentName === ''}
-                  ></AttributeTextField>
+                  <FormControl fullWidth>
+                    <Select
+                      id="agentName"
+                      isSearchable={true}
+                      name="workers"
+                      maxMenuHeight={150}
+                      onChange={this.handleChangeQuery}
+                      onInputChange={this.handleInputChange}
+                      onMenuOpen={this.handleOnFocus}
+                      options={workers}
+                      inputValue={this.state.inputText}
+                      value={this.state.selectedWorker || null}
+                    />
+                  </FormControl>
                 </TableCell>
               </TableRow>
               <TableRow key={`${this.props.agentExt} agentExtension`}>
