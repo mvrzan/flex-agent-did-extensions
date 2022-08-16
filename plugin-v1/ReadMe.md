@@ -2,7 +2,9 @@
 <img  src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg"  alt="Twilio"  width="250"  />
 </a>
 
-# Agent DID Extensions Plugin - Flex 2.X
+# Agent DID Extensions Plugin - Flex 1.X
+
+Note: Version 2.x of this plugin has been migrated to Flex 2.0 and has additional features that were not added to this version.
 
 Twilio Flex Plugins allow you to customize the appearance and behavior of [Twilio Flex](https://www.twilio.com/flex). If you want to learn more about the capabilities and how to use the API, check out our [Flex documentation](https://www.twilio.com/docs/flex).
 
@@ -82,9 +84,17 @@ This version of the plugin is built using React class-based components. In order
 
 Right now, all of the Sync map items are listed on the single page which makes for a poor user experience.
 
+#### Extension validation
+
+Agent extensions should have 1:1 mapping between agents. At the moment, the plugin does not have validation to prevent the user from entering duplicate records into the Sync Map item.
+
 #### Sorting
 
 Implement sorting of the existing records in the UI.
+
+#### Automatically query agent info and map worker SIDs
+
+At the moment, the supervisor would have to manually update every field in the UI that is mapped to the Sync Map JSON. Next step for this plugin is to use Live Query to pull agent info and to programmatically pass worker SID information to Sync Map.
 
 ## Development
 
@@ -178,7 +188,7 @@ Your functions will now be present in the Twilio Functions Console and be part o
 Create the plugin config file by copying `.env.example` to `.env`.
 
 ```bash
-cd agent-DID-extensions/plugin-v2
+cd agent-DID-extensions/plugin
 cp .env.example .env
 ```
 
@@ -187,7 +197,7 @@ Edit `.env` and set the `FLEX_APP_FUNCTIONS_BASE` variable to your Twilio Functi
 To run the plugin locally, you can use the Twilio Flex CLI plugin. Using your command line, run the following from the root directory of the plugin.
 
 ```bash
-cd agent-DID-extensions/plugin-v2
+cd agent-DID-extensions/plugin
 twilio flex:plugins:start
 ```
 
