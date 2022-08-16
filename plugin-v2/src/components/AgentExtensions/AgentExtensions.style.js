@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-// import { TableCell } from '@material-ui/core';
 import { Th, Td } from '@twilio-paste/core';
 
 export const TableHeaderCell = styled(Th)`

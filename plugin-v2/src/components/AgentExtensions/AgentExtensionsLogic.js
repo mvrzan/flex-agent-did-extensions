@@ -1,25 +1,6 @@
 import React from 'react';
-import {
-  IconButton,
-  Icon,
-  Notifications,
-  MessagingCanvas,
-  SidePanel,
-} from '@twilio/flex-ui';
-import {
-  Flex,
-  Table,
-  THead,
-  TBody,
-  Th,
-  Tr,
-  Td,
-  Text,
-  Box,
-} from '@twilio-paste/core';
-import { Theme } from '@twilio-paste/core/theme';
-import { EditIcon } from '@twilio-paste/icons/esm/EditIcon';
-// import { SidePanel } from '@twilio/flex-ui-core';
+import { IconButton, Notifications } from '@twilio/flex-ui';
+import { Flex, Table, THead, TBody, Th, Tr } from '@twilio-paste/core';
 
 import { TableData, TableHeaderCell } from './AgentExtensions.style';
 import SyncHelper from '../utils/syncUtil';
@@ -27,7 +8,6 @@ import NewExtButton from '../NewExtension/NewExtensionsButton';
 import LoadingScreen from './LoadingScreen';
 import NewExtensionSidePanel from '../NewExtension/NewExtensionSidePanel';
 import SyncEmpty from './SyncEmptyView';
-// import { Box } from '@material-ui/core';
 
 class AgentExtensionsLogic extends React.Component {
   constructor() {
@@ -74,7 +54,7 @@ class AgentExtensionsLogic extends React.Component {
 
     // prep syncMap data
     const formattedSyncMapItems = getSyncMapItems.map(mapItem => {
-      // items return from the sync map have a slightly different structure: item.value vs item.descriptor.data
+      // items return from the sync map have a slightly different structure in Flex 2.x: item.value vs item.descriptor.data
       let newObject = mapItem.item.descriptor.data;
       newObject.mapKey = mapItem.item.descriptor.key;
       return newObject;

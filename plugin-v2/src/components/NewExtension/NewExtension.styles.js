@@ -1,12 +1,6 @@
 import styled from 'react-emotion';
-import { Flex, Th, Td, Input, Box } from '@twilio-paste/core';
-import { TableCell, TextField } from '@material-ui/core';
+import { Flex, Th, Input } from '@twilio-paste/core';
 
-export const Caption = styled('div')`
-  font-size: 12px;
-  margin: 12px;
-  font-weight: bold;
-`;
 export const AttributeTableCell = styled(Th)`
   font-size: 12px;
   padding: 0px 12px 0px 12px

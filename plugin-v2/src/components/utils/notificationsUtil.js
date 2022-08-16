@@ -2,12 +2,12 @@ import { Notifications, NotificationType } from '@twilio/flex-ui';
 
 const registerExtensionAlreadyExists = manager => {
   manager.strings.extensionAlreadyExists =
-    'Agent Extension already exists. Modifying an existing extension!';
+    'Agent Extension already exists! Agent "{{errorString}}" has the extension already configured!';
   Notifications.registerNotification({
     id: 'extensionAlreadyExists',
     content: 'extensionAlreadyExists',
     closeButton: true,
-    timeout: 5000,
+    timeout: 3000,
     type: NotificationType.warning,
   });
 };
@@ -18,7 +18,7 @@ const registerExtDeleted = manager => {
     id: 'extDeleted',
     content: 'extDeleted',
     closeButton: true,
-    timeout: 2000,
+    timeout: 1000,
     type: NotificationType.warning,
   });
 };
@@ -30,7 +30,7 @@ const registerExtensionUpdatedSuccessfully = manager => {
     id: 'extensionUpdatedSuccessfully',
     content: 'extensionUpdatedSuccessfully',
     closeButton: true,
-    timeout: 2000,
+    timeout: 1000,
     type: NotificationType.success,
   });
 };

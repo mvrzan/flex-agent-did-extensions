@@ -1,10 +1,8 @@
 import React from 'react';
-import { SideLink, Actions } from '@twilio/flex-ui';
+import { SideLink, Actions, View } from '@twilio/flex-ui';
 import * as flex from '@twilio/flex-ui';
-import { View } from '@twilio/flex-ui';
 import AgentExtensionsLogic from './AgentExtensionsLogic.js';
 import { isAgentRole } from '../utils/workerUtil';
-import { CustomizationProvider } from '@twilio-paste/core/customization';
 
 const AgentExtensionView = ({ activeView }) => {
   function navigate() {
@@ -40,9 +38,5 @@ if (!isAgentRole()) {
     </View>
   );
 }
-
-flex.setProviders({
-  PasteThemeProvider: CustomizationProvider,
-});
 
 export default AgentExtensionView;

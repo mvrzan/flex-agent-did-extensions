@@ -13,10 +13,12 @@ export default class AgentExtensions extends FlexPlugin {
   }
 
   async init(flex = typeof Flex, manager = Flex.Manager) {
+    // pass the PasteThemeProvider to all Flex UI components without the need to wrap them separately
     flex.setProviders({
       PasteThemeProvider: CustomizationProvider,
     });
 
+    // register custom notifications with Flex manager
     registerNotifications(manager);
     const initializers = [AgentExtensionView];
     initializers.forEach(initializer => initializer(flex, manager));

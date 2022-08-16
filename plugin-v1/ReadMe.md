@@ -4,6 +4,8 @@
 
 # Agent DID Extensions Plugin - Flex 1.X
 
+Note: Version 2.x of this plugin has been migrated to Flex 2.0 and has additional features that were not added to this version.
+
 Twilio Flex Plugins allow you to customize the appearance and behavior of [Twilio Flex](https://www.twilio.com/flex). If you want to learn more about the capabilities and how to use the API, check out our [Flex documentation](https://www.twilio.com/docs/flex).
 
 ## How it works

@@ -15,15 +15,12 @@ import {
   AttributeTableCell,
   AttributeName,
   AttributeTextField,
-  ButtonsContainer,
 } from './NewExtension.styles';
 import SyncHelper from '../utils/syncUtil';
 
 import FormControl from '@material-ui/core/FormControl';
 import Select from 'react-select';
 import { debounce } from 'lodash';
-
-import { Combobox } from '@twilio-paste/core';
 
 const SYNC_CLIENT = Manager.getInstance();
 
@@ -42,23 +39,12 @@ class NewExtensionSidePanel extends Component {
       inputText: '',
     };
   }
+
   async componentDidMount() {
     this.setWorkers();
   }
 
   handleChange = e => {
-    // use instantQuery to get a list of workers
-    // SYNC_CLIENT.insightsClient.instantQuery('tr-worker').then(q => {
-    //   q.on('searchResult', items => {
-    //     Object.entries(items).forEach(([key, value]) => {
-    //       console.log('Search result item key:', key);
-    //       console.log('Search result item value:', value);
-    //     });
-    //   });
-    //   q.search('');
-    // });
-
-    console.log('real event', e);
     const value = e.target.value;
     //Text Field id needs to match State property
     const id = e.target.id;
@@ -68,16 +54,11 @@ class NewExtensionSidePanel extends Component {
   };
 
   setWorkers = (query = '') => {
-    const { contact_uri: worker_contact_uri } =
-      SYNC_CLIENT.workerClient.attributes;
-
     SYNC_CLIENT.insightsClient.instantQuery('tr-worker').then(q => {
       q.on('searchResult', items => {
-        console.log(items);
         this.setState({
           workerList: Object.keys(items).map(workerSid => items[workerSid]),
         });
-        console.log('workerlist', this.state.workerList);
       });
 
       q.search(`${query !== '' ? `${query}` : ''}`);
@@ -85,11 +66,8 @@ class NewExtensionSidePanel extends Component {
   };
 
   handleInputChange = event => {
-    console.log('handleInputChange', event);
-    console.log('handleInputChange', this.state.inputText);
     this.setState({ inputText: event });
     this.handleWorkersListUpdate(event);
-    console.log('handleInputChange', this.state.inputText);
 
     if (event !== '') {
       this.setState({ selectedWorker: null });
@@ -97,18 +75,11 @@ class NewExtensionSidePanel extends Component {
   };
 
   handleChangeQuery = event => {
-    console.log('hey');
-    const value = event.label;
-    console.log(this.state.agentName);
-    console.log(event);
-    // //Text Field id needs to match State property
-    // const id = event.target.id;
-    // let newState = { changed: true };
-    // newState[agentName] = value;
-    this.setState({ agentName: value });
-    this.setState({ selectedWorker: event });
-    this.setState({ workerSid: event.workersid });
-    console.log(this.state.agentName);
+    this.setState({
+      agentName: event.label,
+      selectedWorker: event,
+      workerSid: event.workersid,
+    });
   };
 
   handleOnFocus = () => {
@@ -138,37 +109,27 @@ class NewExtensionSidePanel extends Component {
         : this.state.agentExtension;
     const workerSid =
       this.state.workerSid === '' ? this.props.workerSid : this.state.workerSid;
-    // const mapKey = agentExtension;
     const mapKey = workerSid;
 
     let mapValue = {
       workerFullName: agentName,
       extensionNumber: agentExtension,
       workerSid: workerSid,
-      // testWorkerName: this.state.inputText, // added this to use for the button change
     };
 
-    // TODO: check if extension already exists
+    // check if there's an existing extension already assigned to an agent
+    const existingExtension = await SyncHelper.getMapItem(
+      mapName,
+      agentExtension
+    );
+    if (existingExtension.extensionNumber === agentExtension) {
+      Notifications.showNotification('extensionAlreadyExists', {
+        errorString: existingExtension.workerFullName,
+      });
+      return;
+    }
 
-    // getMapItem
-    // if !== null
-    // updateMapItem
-    // then
-    // deleteMapItem
-    // else
-    // updateMapItem
-
-    // const mapItem = await SyncHelper.getMapItemTwo(mapName, agentExtension);
-    // console.log('mapitem', mapItem);
-    // if (mapItem !== null) {
-    //   await SyncHelper.updateMapItem(mapName, mapKey, mapValue);
-    //   await SyncHelper.deleteMapItem(mapName, agentExtension);
-    //   Notifications.showNotification('extensionUpdatedSuccessfully');
-    // } else {
-    //   await SyncHelper.updateMapItem(mapName, mapKey, mapValue);
-    //   Notifications.showNotification('extensionUpdatedSuccessfully');
-    // }
-
+    // update the sync map item
     await SyncHelper.updateMapItem(mapName, mapKey, mapValue);
     Notifications.showNotification('extensionUpdatedSuccessfully');
 
@@ -184,12 +145,8 @@ class NewExtensionSidePanel extends Component {
       .map(worker => {
         const { contact_uri, full_name } = worker.attributes;
         const workersid = worker.worker_sid;
-        // console.log(worker.worker_sid);
 
         return { label: full_name, value: contact_uri, workersid: workersid };
-        // return activity_name !== 'Offline'
-        //   ? { label: full_name, value: contact_uri }
-        //   : null;
       })
       .filter(elem => elem);
 
@@ -291,17 +248,6 @@ class NewExtensionSidePanel extends Component {
               </Button>
             </Box>
           </Flex>
-          {/* <ButtonsContainer>
-            <Button onClick={this.props.clickHandler}>Cancel</Button>
-            <Button
-              onClick={() => {
-                this.saveMapItem();
-                this.props.syncEmpty();
-              }}
-            >
-              Save
-            </Button>
-          </ButtonsContainer> */}
         </Container>
       </SidePanel>
     );
