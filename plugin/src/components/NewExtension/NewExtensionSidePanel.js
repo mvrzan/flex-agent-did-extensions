@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import {
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
+  Button,
   Table,
-} from '@material-ui/core';
-import { Button, SidePanel } from '@twilio/flex-ui-core';
-import { Notifications } from '@twilio/flex-ui';
-import { Manager } from '@twilio/flex-ui';
+  THead,
+  TBody,
+  Th,
+  Tr,
+  Flex,
+  Box,
+} from '@twilio-paste/core';
+import { Manager, Notifications, SidePanel } from '@twilio/flex-ui';
 import {
   Container,
   AttributeTableCell,
@@ -21,7 +22,8 @@ import SyncHelper from '../utils/syncUtil';
 import FormControl from '@material-ui/core/FormControl';
 import Select from 'react-select';
 import { debounce } from 'lodash';
-import InputLabel from '@material-ui/core/InputLabel';
+
+import { Combobox } from '@twilio-paste/core';
 
 const SYNC_CLIENT = Manager.getInstance();
 
@@ -36,6 +38,7 @@ class NewExtensionSidePanel extends Component {
       stateAgentName: this.props.agentName,
       workerList: [],
       selectedWorker: null,
+      selectedWorkerSid: '',
       inputText: '',
     };
   }
@@ -74,6 +77,7 @@ class NewExtensionSidePanel extends Component {
         this.setState({
           workerList: Object.keys(items).map(workerSid => items[workerSid]),
         });
+        console.log('workerlist', this.state.workerList);
       });
 
       q.search(`${query !== '' ? `${query}` : ''}`);
@@ -96,12 +100,14 @@ class NewExtensionSidePanel extends Component {
     console.log('hey');
     const value = event.label;
     console.log(this.state.agentName);
+    console.log(event);
     // //Text Field id needs to match State property
     // const id = event.target.id;
     // let newState = { changed: true };
     // newState[agentName] = value;
     this.setState({ agentName: value });
     this.setState({ selectedWorker: event });
+    this.setState({ workerSid: event.workersid });
     console.log(this.state.agentName);
   };
 
@@ -132,7 +138,8 @@ class NewExtensionSidePanel extends Component {
         : this.state.agentExtension;
     const workerSid =
       this.state.workerSid === '' ? this.props.workerSid : this.state.workerSid;
-    const mapKey = agentExtension;
+    // const mapKey = agentExtension;
+    const mapKey = workerSid;
 
     let mapValue = {
       workerFullName: agentName,
@@ -142,6 +149,25 @@ class NewExtensionSidePanel extends Component {
     };
 
     // TODO: check if extension already exists
+
+    // getMapItem
+    // if !== null
+    // updateMapItem
+    // then
+    // deleteMapItem
+    // else
+    // updateMapItem
+
+    // const mapItem = await SyncHelper.getMapItemTwo(mapName, agentExtension);
+    // console.log('mapitem', mapItem);
+    // if (mapItem !== null) {
+    //   await SyncHelper.updateMapItem(mapName, mapKey, mapValue);
+    //   await SyncHelper.deleteMapItem(mapName, agentExtension);
+    //   Notifications.showNotification('extensionUpdatedSuccessfully');
+    // } else {
+    //   await SyncHelper.updateMapItem(mapName, mapKey, mapValue);
+    //   Notifications.showNotification('extensionUpdatedSuccessfully');
+    // }
 
     await SyncHelper.updateMapItem(mapName, mapKey, mapValue);
     Notifications.showNotification('extensionUpdatedSuccessfully');
@@ -157,8 +183,10 @@ class NewExtensionSidePanel extends Component {
     const workers = this.state.workerList
       .map(worker => {
         const { contact_uri, full_name } = worker.attributes;
+        const workersid = worker.worker_sid;
+        // console.log(worker.worker_sid);
 
-        return { label: full_name, value: contact_uri };
+        return { label: full_name, value: contact_uri, workersid: workersid };
         // return activity_name !== 'Offline'
         //   ? { label: full_name, value: contact_uri }
         //   : null;
@@ -172,19 +200,19 @@ class NewExtensionSidePanel extends Component {
         handleCloseClick={this.props.clickHandler}
       >
         <Container vertical>
-          <Table>
-            <TableHead>
-              <TableRow>
+          <Table tableLayout="fixed">
+            <THead>
+              <Tr>
                 <AttributeTableCell>Attribute</AttributeTableCell>
-                <TableCell>Value</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow key={`${this.props.agentName} agentName`}>
+                <Th>Value</Th>
+              </Tr>
+            </THead>
+            <TBody>
+              <Tr key={`${this.props.agentName} agentName`}>
                 <AttributeTableCell>
                   <AttributeName>Agent Name</AttributeName>
                 </AttributeTableCell>
-                <TableCell>
+                <Th>
                   <FormControl fullWidth>
                     <Select
                       id="agentName"
@@ -195,17 +223,21 @@ class NewExtensionSidePanel extends Component {
                       onInputChange={this.handleInputChange}
                       onMenuOpen={this.handleOnFocus}
                       options={workers}
-                      inputValue={this.state.inputText}
+                      inputValue={
+                        this.state.inputText === ''
+                          ? this.props.agentName
+                          : this.state.inputText
+                      }
                       value={this.state.selectedWorker || null}
                     />
                   </FormControl>
-                </TableCell>
-              </TableRow>
-              <TableRow key={`${this.props.agentExt} agentExtension`}>
+                </Th>
+              </Tr>
+              <Tr key={`${this.props.agentExt} agentExtension`}>
                 <AttributeTableCell>
                   <AttributeName>Agent Extension</AttributeName>
                 </AttributeTableCell>
-                <TableCell>
+                <Th>
                   <AttributeTextField
                     id="agentExtension"
                     value={this.agentExtension}
@@ -217,39 +249,59 @@ class NewExtensionSidePanel extends Component {
                       isNaN(this.state.agentExtension)
                     }
                   ></AttributeTextField>
-                </TableCell>
-              </TableRow>
-              <TableRow key={`${this.props.workerSid} workerSid`}>
+                </Th>
+              </Tr>
+              <Tr key={`${this.props.workerSid} workerSid`}>
                 <AttributeTableCell>
                   <AttributeName>Worker SID</AttributeName>
                 </AttributeTableCell>
-                <TableCell>
+                <Th>
                   <AttributeTextField
+                    disabled
                     id="workerSid"
-                    value={this.workerSid}
+                    value={
+                      this.state.workerSid == ''
+                        ? this.props.workerSid
+                        : this.state.workerSid
+                    }
                     defaultValue={this.props.workerSid}
                     onChange={this.handleChange}
                     onClick={this.handleChange}
                     error={this.state.workerSid === ''}
                   ></AttributeTextField>
-                </TableCell>
-              </TableRow>
-            </TableBody>
+                </Th>
+              </Tr>
+            </TBody>
           </Table>
-          <ButtonsContainer>
-            <Button onClick={this.props.clickHandler} roundCorners={false}>
-              Cancel
-            </Button>
+          <Flex>
+            <Box width="size10" marginLeft="space200" marginTop="space50">
+              <Button onClick={this.props.clickHandler} roundCorners={false}>
+                Cancel
+              </Button>
+            </Box>
+            <Box width="size10" marginLeft="space100" marginTop="space50">
+              <Button
+                onClick={() => {
+                  this.saveMapItem();
+                  this.props.syncEmpty();
+                }}
+                roundCorners={false}
+              >
+                Save
+              </Button>
+            </Box>
+          </Flex>
+          {/* <ButtonsContainer>
+            <Button onClick={this.props.clickHandler}>Cancel</Button>
             <Button
               onClick={() => {
                 this.saveMapItem();
                 this.props.syncEmpty();
               }}
-              roundCorners={false}
             >
               Save
             </Button>
-          </ButtonsContainer>
+          </ButtonsContainer> */}
         </Container>
       </SidePanel>
     );

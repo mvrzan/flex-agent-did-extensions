@@ -4,17 +4,17 @@ import { PLUGIN_NAME } from '../../AgentExtensions';
 
 const SYNC_CLIENT = new SyncClient(Manager.getInstance().user.token);
 
-function tokenUpdateHandler() {
-  console.log(PLUGIN_NAME, 'Refreshing SYNC_CLIENT Token');
+// function tokenUpdateHandler() {
+//   console.log(PLUGIN_NAME, 'Refreshing SYNC_CLIENT Token');
 
-  const loginHandler =
-    Manager.getInstance().store.getState().flex.session.loginHandler;
+//   const loginHandler =
+//     Manager.getInstance().store.getState().flex.session.loginHandler;
 
-  const tokenInfo = loginHandler.getTokenInfo();
-  const accessToken = tokenInfo.token;
+//   const tokenInfo = loginHandler.getTokenInfo();
+//   const accessToken = tokenInfo.token;
 
-  SYNC_CLIENT.updateToken(accessToken);
-}
+//   SYNC_CLIENT.updateToken(accessToken);
+// }
 
 export default class SyncHelper {
   static init(manager) {
@@ -72,9 +72,14 @@ export default class SyncHelper {
       const mapItems = await this.getMapItems(mapName);
       console.log(PLUGIN_NAME, 'Map Items Array', mapItems);
       //Map Items array of (mapItem) objects with item child object
-      const mapItem = mapItems.find(mapItem => mapItem.item.key === key);
+      const mapItem = mapItems.find(mapItem => {
+        mapItem.item.descriptor.key === key;
+        console.log('descriptor key', mapItem.item.descriptor.key);
+        console.log('key', key);
+      });
+      console.log(mapItem);
       if (mapItem) {
-        return mapItem.item.value;
+        return mapItem.item.descriptor.data;
       } else {
         return {};
       }
@@ -82,6 +87,23 @@ export default class SyncHelper {
       console.error('Map getItem() failed', error);
       return {};
     }
+  }
+
+  static async getMapItemTwo(mapName, key) {
+    try {
+      const map = await SYNC_CLIENT.map(mapName);
+      map
+        .get(key)
+        .then(item => {
+          console.log(
+            'Map SyncMapItem get() successful, item data:',
+            item.descriptor.data
+          );
+        })
+        .catch(error => {
+          console.error('Map SyncMapItem get() failed', error);
+        });
+    } catch (error) {}
   }
 
   static async updateMapItem(mapName, mapKey, data) {

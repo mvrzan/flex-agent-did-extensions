@@ -2,13 +2,13 @@ import { Notifications, NotificationType } from '@twilio/flex-ui';
 
 const registerExtensionAlreadyExists = manager => {
   manager.strings.extensionAlreadyExists =
-    'Agent Extension already exists "{{errorString}}"';
+    'Agent Extension already exists. Modifying an existing extension!';
   Notifications.registerNotification({
     id: 'extensionAlreadyExists',
     content: 'extensionAlreadyExists',
     closeButton: true,
     timeout: 5000,
-    type: NotificationType.error,
+    type: NotificationType.warning,
   });
 };
 

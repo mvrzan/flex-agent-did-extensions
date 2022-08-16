@@ -1,20 +1,20 @@
 import React, { Component } from 'react';
-import { Table, TableBody, TableRow, TableCell } from '@material-ui/core';
+import { TBody, Th, Tr } from '@twilio-paste/core';
 import { TableData } from './AgentExtensions.style';
 
 class LoadingScreen extends Component {
   render() {
     return (
-      <TableBody>
-        <TableRow>
-          <TableCell>
+      <TBody>
+        <Tr>
+          <Th>
             <TableData>Loading...</TableData>
-          </TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-        </TableRow>
-      </TableBody>
+          </Th>
+          <Th></Th>
+          <Th></Th>
+          <Th></Th>
+        </Tr>
+      </TBody>
     );
   }
 }

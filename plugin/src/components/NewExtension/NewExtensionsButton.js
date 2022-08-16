@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@twilio-paste/core';
 
 class NewExtButton extends Component {
   constructor(props) {
