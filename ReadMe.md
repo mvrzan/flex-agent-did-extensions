@@ -70,7 +70,7 @@ This plugin is using the Sync [JavaScript SDK](https://media.twiliocdn.com/sdk/j
 
 #### Supported Flex version
 
-This plugin only supports Twilio Flex v1.x. For Twilio Flex v2.x a rewrite of the UI is needed.
+This plugin only supports Twilio Flex v2.x. For Twilio Flex v1.x please check the plugin-v1 folder. Please note that the v1.x lacks features compared to this version.
 
 ## ToDo List
 
