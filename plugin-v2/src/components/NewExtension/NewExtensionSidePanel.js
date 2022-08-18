@@ -156,7 +156,7 @@ class NewExtensionSidePanel extends Component {
         title={<div>New Agent Extension</div>}
         handleCloseClick={this.props.clickHandler}
       >
-        <Container vertical>
+        <Container vertical padding="space30">
           <Table tableLayout="fixed">
             <THead>
               <Tr>

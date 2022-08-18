@@ -11,6 +11,7 @@ export const AttributeTableCell = styled(Th)`
 export const AttributeName = styled('div')`
   font-size: 12px;
   margin: 0px 6px 0px;
+  width: 150px;
 `;
 
 export const AttributeTextField = styled(Input)`
