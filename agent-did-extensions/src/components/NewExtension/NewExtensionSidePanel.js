@@ -141,6 +141,7 @@ class NewExtensionSidePanel extends Component {
   };
 
   render() {
+    console.log('props', this.props);
     const workers = this.state.workerList
       .map(worker => {
         const { contact_uri, full_name } = worker.attributes;
