@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import {
   Button,
   Table,
@@ -31,7 +31,6 @@ class NewExtensionSidePanel extends Component {
       agentName: '',
       agentExtension: '',
       workerSid: '',
-      changed: false,
       stateAgentName: this.props.agentName,
       workerList: [],
       selectedWorker: null,
@@ -48,7 +47,7 @@ class NewExtensionSidePanel extends Component {
     const value = e.target.value;
     //Text Field id needs to match State property
     const id = e.target.id;
-    let newState = { changed: true };
+    let newState = {};
     newState[id] = value;
     this.setState(newState);
   };
@@ -223,8 +222,6 @@ class NewExtensionSidePanel extends Component {
                         : this.state.workerSid
                     }
                     defaultValue={this.props.workerSid}
-                    onChange={this.handleChange}
-                    onClick={this.handleChange}
                     error={this.state.workerSid === ''}
                   ></AttributeTextField>
                 </Th>
@@ -256,3 +253,125 @@ class NewExtensionSidePanel extends Component {
 }
 
 export default NewExtensionSidePanel;
+
+const NewExtensionSidePanelHook = () => {
+  const [agentExtension, setAgentExtensions] = useState();
+  const [agents, setAgents] = useState({});
+
+  const changeHandler = event => {
+    setAgentExtensions(event.target.value);
+  };
+
+  const setWorkers = (query = '') => {
+    SYNC_CLIENT.insightsClient.instantQuery('tr-worker').then(q => {
+      q.on('searchResult', items => {
+        setAgents(prevState => ({
+          ...prevState,
+          agents: Object.keys(items).map(workerSid => items[workerSid]),
+        }));
+      });
+
+      q.search(`${query !== '' ? `${query}` : ''}`);
+    });
+  };
+
+  return (
+    <SidePanel
+      displayName="New Agent Extension"
+      title={<div>New Agent Extension</div>}
+      handleCloseClick={this.props.clickHandler}
+    >
+      <Container vertical padding="space30">
+        <Table tableLayout="fixed">
+          <THead>
+            <Tr>
+              <AttributeTableCell>Attribute</AttributeTableCell>
+              <Th>Value</Th>
+            </Tr>
+          </THead>
+          <TBody>
+            <Tr key={`${this.props.agentName} agentName`}>
+              <AttributeTableCell>
+                <AttributeName>Agent Name</AttributeName>
+              </AttributeTableCell>
+              <Th>
+                <FormControl fullWidth>
+                  <Select
+                    id="agentName"
+                    isSearchable={true}
+                    name="workers"
+                    maxMenuHeight={150}
+                    onChange={this.handleChangeQuery}
+                    onInputChange={this.handleInputChange}
+                    onMenuOpen={this.handleOnFocus}
+                    options={workers}
+                    inputValue={
+                      this.state.inputText === ''
+                        ? this.props.agentName
+                        : this.state.inputText
+                    }
+                    value={this.state.selectedWorker || null}
+                  />
+                </FormControl>
+              </Th>
+            </Tr>
+            <Tr key={`${this.props.agentExt} agentExtension`}>
+              <AttributeTableCell>
+                <AttributeName>Agent Extension</AttributeName>
+              </AttributeTableCell>
+              <Th>
+                <AttributeTextField
+                  id="agentExtension"
+                  value={agentExtension}
+                  defaultValue={this.props.agentExt}
+                  onChange={changeHandler}
+                  onClick={changeHandler}
+                  error={
+                    this.state.agentExtension === '' ||
+                    isNaN(this.state.agentExtension)
+                  }
+                ></AttributeTextField>
+              </Th>
+            </Tr>
+            <Tr key={`${this.props.workerSid} workerSid`}>
+              <AttributeTableCell>
+                <AttributeName>Worker SID</AttributeName>
+              </AttributeTableCell>
+              <Th>
+                <AttributeTextField
+                  disabled
+                  id="workerSid"
+                  value={
+                    this.state.workerSid == ''
+                      ? this.props.workerSid
+                      : this.state.workerSid
+                  }
+                  defaultValue={this.props.workerSid}
+                  error={this.state.workerSid === ''}
+                ></AttributeTextField>
+              </Th>
+            </Tr>
+          </TBody>
+        </Table>
+        <Flex>
+          <Box width="size10" marginLeft="space200" marginTop="space50">
+            <Button onClick={this.props.clickHandler} roundCorners={false}>
+              Cancel
+            </Button>
+          </Box>
+          <Box width="size10" marginLeft="space100" marginTop="space50">
+            <Button
+              onClick={() => {
+                this.saveMapItem();
+                this.props.syncEmpty();
+              }}
+              roundCorners={false}
+            >
+              Save
+            </Button>
+          </Box>
+        </Flex>
+      </Container>
+    </SidePanel>
+  );
+};

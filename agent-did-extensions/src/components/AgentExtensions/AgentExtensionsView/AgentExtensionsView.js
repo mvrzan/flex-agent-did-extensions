@@ -1,15 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Flex, Table } from '@twilio-paste/core';
 
-import SyncHelper from '../../utils/syncUtil/syncUtil';
-import LoadingScreen from './LoadingScreen/LoadingScreen';
-import NewExtensionSidePanel from '../NewExtension/SidePanel/NewExtensionSidePanel';
-import EmptyView from './EmptyView/EmptyView';
+import SyncHelper from '../../../utils/syncUtil/syncUtil';
+import LoadingScreen from '../LoadingScreen/LoadingScreen';
+import NewExtensionSidePanel from '../../NewExtension/SidePanel/NewExtensionSidePanel';
+import EmptyView from '../EmptyView/EmptyView';
 
-import TableHeader from './Table/TableHeader';
-import TableBody from './Table/TableBody';
+import TableHeader from '../Table/TableHeader';
+import TableBody from '../Table/TableBody';
 
-const AgentExtensionsLogic = () => {
+const AgentExtensionsView = () => {
   const [agentExtensions, setAgentExtensions] = useState([]);
   const [isNewExtButtonVisible, setIsNewExtButtonVisible] = useState(true);
   const [isSidePanelVisible, setIsSidePanelVisible] = useState(false);
@@ -104,4 +104,4 @@ const AgentExtensionsLogic = () => {
   );
 };
 
-export default AgentExtensionsLogic;
+export default AgentExtensionsView;
