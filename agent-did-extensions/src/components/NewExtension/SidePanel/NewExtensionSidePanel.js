@@ -16,7 +16,7 @@ import {
   AttributeName,
   AttributeTextField,
 } from './NewExtension.styles';
-import SyncHelper from '../../../utils/syncUtil';
+import SyncHelper from '../../../utils/syncUtil/syncUtil';
 
 import FormControl from '@material-ui/core/FormControl';
 import Select from 'react-select';
@@ -141,6 +141,7 @@ class NewExtensionSidePanel extends Component {
   };
 
   render() {
+    console.log('props', this.props);
     const workers = this.state.workerList
       .map(worker => {
         const { contact_uri, full_name } = worker.attributes;

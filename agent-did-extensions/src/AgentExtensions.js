@@ -3,9 +3,9 @@ import { CustomizationProvider } from '@twilio-paste/core/customization';
 import { View } from '@twilio/flex-ui';
 
 import SideNavigationIcon from './components/SideNavigation/SideNavigationIcon.js';
-import registerNotifications from './utils/notificationsUtil.js';
+import registerNotifications from './utils/notifications/notificationsUtil.js';
 import AgentExtensionsLogic from './components/AgentExtensions/AgentExtensionsLogic.js';
-import { isAgentRole } from './utils/workerUtil';
+import { isAgentRole } from './utils/workerUtil/workerUtil';
 
 export const PLUGIN_NAME = 'AgentExtensions';
 

@@ -7,9 +7,6 @@ const LoadingScreen = () => {
         <Th>
           <Td>Loading...</Td>
         </Th>
-        <Th></Th>
-        <Th></Th>
-        <Th></Th>
       </Tr>
     </TBody>
   );

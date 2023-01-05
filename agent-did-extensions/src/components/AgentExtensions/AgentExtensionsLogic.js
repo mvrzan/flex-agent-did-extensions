@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Flex, Table } from '@twilio-paste/core';
 
-import SyncHelper from '../../utils/syncUtil';
+import SyncHelper from '../../utils/syncUtil/syncUtil';
 import LoadingScreen from './LoadingScreen/LoadingScreen';
-import NewExtensionSidePanel from '../NewExtension/NewExtensionSidePanel';
-import EmptyView from './EmptyView/SyncEmptyView';
+import NewExtensionSidePanel from '../NewExtension/SidePanel/NewExtensionSidePanel';
+import EmptyView from './EmptyView/EmptyView';
 
 import TableHeader from './Table/TableHeader';
 import TableBody from './Table/TableBody';

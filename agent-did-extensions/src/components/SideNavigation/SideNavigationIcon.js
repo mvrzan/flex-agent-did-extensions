@@ -1,4 +1,3 @@
-import React from 'react';
 import { SideLink, Actions } from '@twilio/flex-ui';
 
 const SideNavigationIcon = ({ activeView }) => {

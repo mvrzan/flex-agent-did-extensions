@@ -1,7 +1,7 @@
 import { IconButton } from '@twilio/flex-ui';
 import { Notifications } from '@twilio/flex-ui';
 
-import SyncHelper from '../../../utils/syncUtil';
+import SyncHelper from '../../../utils/syncUtil/syncUtil';
 
 const RemoveExtIcon = ({ mapKey, updateAgentExtensions }) => {
   const deleteAgentExtHandler = async mapKey => {

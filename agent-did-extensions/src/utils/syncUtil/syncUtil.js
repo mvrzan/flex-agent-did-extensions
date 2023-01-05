@@ -1,6 +1,6 @@
 import { Manager } from '@twilio/flex-ui';
 import { SyncClient } from 'twilio-sync';
-import { PLUGIN_NAME } from '../AgentExtensions';
+import { PLUGIN_NAME } from '../../AgentExtensions';
 
 const SYNC_CLIENT = new SyncClient(Manager.getInstance().user.token);
 
