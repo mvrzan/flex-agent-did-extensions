@@ -77,6 +77,7 @@ export default class SyncHelper {
 
   static async updateMapItem(mapName, mapKey, data) {
     try {
+      console.log(mapName, mapKey, data);
       const map = await SYNC_CLIENT.map(mapName);
       const update = await map.update(mapKey, data);
     } catch (error) {

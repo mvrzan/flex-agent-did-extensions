@@ -78,12 +78,6 @@ const NewExtensionSidePanel = props => {
     setWorkerSid(event.workersid);
   };
 
-  const onFocusHandler = () => {
-    if (inputText === '' && agents.length === 0) {
-      setWorkers();
-    }
-  };
-
   let handleWorkersListUpdate = debounce(
     e => {
       if (e) {
@@ -100,7 +94,8 @@ const NewExtensionSidePanel = props => {
     const checkAgentExtension =
       agentExtension === '' ? props.agentExt : agentExtension;
     const checkWorkerSid = workerSid === '' ? props.workerSid : workerSid;
-    const mapKey = workerSid;
+    const mapKey = checkWorkerSid;
+    console.log('mapKey', mapKey);
 
     let mapValue = {
       workerFullName: checkAgentName,
@@ -108,7 +103,6 @@ const NewExtensionSidePanel = props => {
       workerSid: checkWorkerSid,
     };
 
-    console.log(mapValue);
     // check if there's an existing extension already assigned to an agent
     const existingExtension = await SyncHelper.getMapItem(
       mapName,
@@ -165,7 +159,6 @@ const NewExtensionSidePanel = props => {
                     maxMenuHeight={150}
                     onChange={changeQueryHandler}
                     onInputChange={inputChangeHandler}
-                    onMenuOpen={onFocusHandler}
                     options={agents}
                     inputValue={inputText === '' ? props.agentName : inputText}
                     value={selectedWorker || null}
