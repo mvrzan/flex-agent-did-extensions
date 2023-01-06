@@ -22,6 +22,7 @@ import SaveButton from './Buttons/SaveButton';
 
 const SYNC_CLIENT = Manager.getInstance();
 
+// props.agentExt
 const NewExtensionSidePanel = props => {
   const [agentExtension, setAgentExtension] = useState();
   const [agents, setAgents] = useState([]);
@@ -33,9 +34,6 @@ const NewExtensionSidePanel = props => {
 
   const changeHandler = event => {
     setAgentExtension(event.target.value);
-    // if (isNaN(event.target.value)) {
-    //   setIsVisible(false);
-    // }
   };
 
   const getAgents = (query = '') => {
@@ -67,7 +65,7 @@ const NewExtensionSidePanel = props => {
 
   const inputChangeHandler = event => {
     setInputText(event);
-    handleWorkersListUpdate(event);
+    workersListUpdateHandler(event);
 
     if (event !== '') {
       setSelectedWorker(null);
@@ -80,7 +78,7 @@ const NewExtensionSidePanel = props => {
     setWorkerSid(event.workersid);
   };
 
-  let handleWorkersListUpdate = debounce(
+  let workersListUpdateHandler = debounce(
     e => {
       if (e) {
         getAgents(`data.attributes.full_name CONTAINS "${e}"`);
@@ -138,7 +136,18 @@ const NewExtensionSidePanel = props => {
     if (isNaN(agentExtension)) {
       setIsVisible(false);
     }
-  }, [agentExtension, selectedWorker]);
+    if (props.agentExt) {
+      setIsVisible(true);
+    }
+  }, [agentExtension, selectedWorker, props.agentExt]);
+
+  useEffect(() => {
+    setAgentExtension(props.agentExt);
+  }, [props.agentExt]);
+
+  useEffect(() => {
+    setWorkerSid(props.workerSid);
+  }, [props.workerSid]);
 
   useEffect(() => {
     getAgents();
