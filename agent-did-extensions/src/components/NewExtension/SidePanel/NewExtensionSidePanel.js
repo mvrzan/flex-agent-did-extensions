@@ -1,26 +1,25 @@
 import { useEffect, useState } from 'react';
 import {
-  Button,
+  Stack,
   Table,
   THead,
   TBody,
   Th,
   Tr,
   Flex,
+  Input,
+  Tooltip,
+  Separator,
   Box,
 } from '@twilio-paste/core';
 import { Manager, Notifications, SidePanel } from '@twilio/flex-ui';
-import {
-  Container,
-  AttributeTableCell,
-  AttributeName,
-  AttributeTextField,
-} from './NewExtension.styles';
-import SyncHelper from '../../../utils/syncUtil/syncUtil';
 
+import SyncHelper from '../../../utils/syncUtil/syncUtil';
 import FormControl from '@material-ui/core/FormControl';
 import Select from 'react-select';
 import { debounce } from 'lodash';
+import CancelButton from './Buttons/CancelButton';
+import SaveButton from './Buttons/SaveButton';
 
 const SYNC_CLIENT = Manager.getInstance();
 
@@ -36,7 +35,7 @@ const NewExtensionSidePanel = props => {
     setAgentExtension(event.target.value);
   };
 
-  const setWorkers = (query = '') => {
+  const getAgents = (query = '') => {
     SYNC_CLIENT.insightsClient.instantQuery('tr-worker').then(q => {
       q.on('searchResult', items => {
         const responseWorkers = Object.keys(items).map(
@@ -81,7 +80,7 @@ const NewExtensionSidePanel = props => {
   let handleWorkersListUpdate = debounce(
     e => {
       if (e) {
-        setWorkers(`data.attributes.full_name CONTAINS "${e}"`);
+        getAgents(`data.attributes.full_name CONTAINS "${e}"`);
       }
     },
     250,
@@ -95,7 +94,6 @@ const NewExtensionSidePanel = props => {
       agentExtension === '' ? props.agentExt : agentExtension;
     const checkWorkerSid = workerSid === '' ? props.workerSid : workerSid;
     const mapKey = checkWorkerSid;
-    console.log('mapKey', mapKey);
 
     let mapValue = {
       workerFullName: checkAgentName,
@@ -128,7 +126,7 @@ const NewExtensionSidePanel = props => {
   };
 
   useEffect(() => {
-    setWorkers();
+    getAgents();
   }, []);
 
   return (
@@ -137,24 +135,24 @@ const NewExtensionSidePanel = props => {
       title={<div>New Agent Extension</div>}
       handleCloseClick={props.clickHandler}
     >
-      <Container vertical padding="space30">
-        <Table tableLayout="fixed">
+      <Stack orientation="vertical" spacing="space10">
+        <Table variant="borderless">
           <THead>
             <Tr>
-              <AttributeTableCell>Attribute</AttributeTableCell>
+              <Th>Attribute</Th>
               <Th>Value</Th>
             </Tr>
           </THead>
           <TBody>
             <Tr key={`${props.agentName} agentName`}>
-              <AttributeTableCell>
-                <AttributeName>Agent Name</AttributeName>
-              </AttributeTableCell>
+              <Tooltip text="Search for the name of the Agent that is going to use the phone number extension.">
+                <Th width="size10">Agent Name</Th>
+              </Tooltip>
               <Th>
                 <FormControl fullWidth>
                   <Select
                     id="agentName"
-                    isSearchable={true}
+                    isSearchable
                     name="workers"
                     maxMenuHeight={150}
                     onChange={changeQueryHandler}
@@ -167,54 +165,46 @@ const NewExtensionSidePanel = props => {
               </Th>
             </Tr>
             <Tr key={`${props.agentExt} agentExtension`}>
-              <AttributeTableCell>
-                <AttributeName>Agent Extension</AttributeName>
-              </AttributeTableCell>
+              <Tooltip text="Enter a numerical agent extension of your choice.">
+                <Th>Agent Extension</Th>
+              </Tooltip>
               <Th>
-                <AttributeTextField
+                <Input
                   id="agentExtension"
                   value={agentExtension}
                   defaultValue={props.agentExt}
                   onChange={changeHandler}
                   onClick={changeHandler}
-                  error={agentExtension === '' || isNaN(agentExtension)}
-                ></AttributeTextField>
+                  // hasError={agentExtension === '' || isNaN(agentExtension)}
+                />
               </Th>
             </Tr>
             <Tr key={`${props.workerSid} workerSid`}>
-              <AttributeTableCell>
-                <AttributeName>Worker SID</AttributeName>
-              </AttributeTableCell>
+              <Tooltip text="The agents identifier (worker SID) is going to be automatically populated.">
+                <Th>Worker SID</Th>
+              </Tooltip>
               <Th>
-                <AttributeTextField
+                <Input
                   disabled
                   id="workerSid"
                   value={workerSid == '' ? props.workerSid : workerSid}
                   defaultValue={props.workerSid}
-                ></AttributeTextField>
+                />
               </Th>
             </Tr>
           </TBody>
         </Table>
-        <Flex>
-          <Box width="size10" marginLeft="space200" marginTop="space50">
-            <Button onClick={props.clickHandler} roundCorners={false}>
-              Cancel
-            </Button>
-          </Box>
-          <Box width="size10" marginLeft="space100" marginTop="space50">
-            <Button
-              onClick={() => {
-                saveAgentExtHandler();
-                props.syncEmpty();
-              }}
-              roundCorners={false}
-            >
-              Save
-            </Button>
-          </Box>
-        </Flex>
-      </Container>
+        <Box padding="space40">
+          <Stack orientation="horizontal" spacing="space30">
+            <CancelButton clickHandler={props.clickHandler} />
+            <SaveButton
+              saveAgentExtHandler={saveAgentExtHandler}
+              syncEmpty={props.syncEmpty}
+            />
+          </Stack>
+        </Box>
+      </Stack>
+      <Separator orientation="horizontal" />
     </SidePanel>
   );
 };

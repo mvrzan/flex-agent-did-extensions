@@ -4,6 +4,18 @@ import { PLUGIN_NAME } from '../../AgentExtensions';
 
 const SYNC_CLIENT = new SyncClient(Manager.getInstance().user.token);
 
+const tokenUpdateHandler = () => {
+  console.log(PLUGIN_NAME, 'Refreshing SYNC_CLIENT Token');
+
+  const loginHandler =
+    Manager.getInstance().store.getState().flex.session.loginHandler;
+
+  const tokenInfo = loginHandler.getTokenInfo();
+  const accessToken = tokenInfo.token;
+
+  SYNC_CLIENT.updateToken(accessToken);
+};
+
 export default class SyncHelper {
   static init(manager) {
     console.log(PLUGIN_NAME, ' SyncHelper add tokenUpdateHandler for sync');
@@ -64,11 +76,9 @@ export default class SyncHelper {
         return mapItem.item.descriptor.data.extensionNumber === key;
       });
 
-      if (mapItem) {
-        return mapItem.item.descriptor.data;
-      } else {
-        return {};
-      }
+      if (mapItem) return mapItem.item.descriptor.data;
+
+      return {};
     } catch (error) {
       console.error('Map getItem() failed', error);
       return {};

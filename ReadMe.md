@@ -74,10 +74,6 @@ This plugin only supports Twilio Flex v2.x. For Twilio Flex v1.x please check th
 
 ## ToDo List
 
-#### Convert to functional components
-
-This version of the plugin is built using React class-based components. In order to follow more modern React development practices, this plugin should be converted to functional components.
-
 #### Implement pagination
 
 Right now, all of the Sync map items are listed on the single page which makes for a poor user experience.
@@ -85,6 +81,10 @@ Right now, all of the Sync map items are listed on the single page which makes f
 #### Sorting
 
 Implement sorting of the existing records in the UI.
+
+### Agent and extension filtering
+
+Allow users to search for specific agent and/or extension in the UI.
 
 ## Development
 
