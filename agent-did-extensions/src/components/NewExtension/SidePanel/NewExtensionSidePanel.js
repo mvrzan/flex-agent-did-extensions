@@ -11,9 +11,8 @@ import {
   Separator,
   Box,
 } from '@twilio-paste/core';
-import { Manager, Notifications, SidePanel } from '@twilio/flex-ui';
+import { Manager, SidePanel } from '@twilio/flex-ui';
 
-import SyncHelper from '../../../utils/syncUtil/syncUtil';
 import FormControl from '@material-ui/core/FormControl';
 import Select from 'react-select';
 import { debounce } from 'lodash';
@@ -93,44 +92,6 @@ const NewExtensionSidePanel = ({
     250,
     { maxWait: 1000 }
   );
-
-  const saveAgentExtHandler = async () => {
-    const mapName = process.env.REACT_APP_SYNC_MAP_NAME;
-    const checkAgentName = agentName === '' ? configuredAgentName : agentName;
-    const checkAgentExtension =
-      agentExtension === '' ? configuredAgentExt : agentExtension;
-    const checkWorkerSid = workerSid === '' ? configuredWorkerSid : workerSid;
-    const mapKey = checkWorkerSid;
-
-    let mapValue = {
-      workerFullName: checkAgentName,
-      extensionNumber: checkAgentExtension,
-      workerSid: checkWorkerSid,
-    };
-
-    // check if there's an existing extension already assigned to an agent
-    const existingExtension = await SyncHelper.getMapItem(
-      mapName,
-      agentExtension
-    );
-
-    if (existingExtension.extensionNumber === checkAgentExtension) {
-      Notifications.showNotification('extensionAlreadyExists', {
-        errorString: existingExtension.workerFullName,
-      });
-      return;
-    }
-
-    // update the sync map item
-    await SyncHelper.updateMapItem(mapName, mapKey, mapValue);
-    Notifications.showNotification('extensionUpdatedSuccessfully');
-
-    // update syncEmpty state because sync is no longer empty
-    syncEmpty();
-
-    clickHandler();
-    updateHandler();
-  };
 
   useEffect(() => {
     if (agentExtension && selectedWorker) {
@@ -233,9 +194,16 @@ const NewExtensionSidePanel = ({
           <Stack orientation="horizontal" spacing="space30">
             <CancelButton clickHandler={clickHandler} />
             <SaveButton
-              saveAgentExtHandler={saveAgentExtHandler}
               syncEmpty={syncEmpty}
               isVisible={isVisible}
+              agentName={agentName}
+              configuredAgentName={configuredAgentName}
+              agentExtension={agentExtension}
+              configuredAgentExt={configuredAgentExt}
+              workerSid={workerSid}
+              configuredWorkerSid={configuredWorkerSid}
+              clickHandler={clickHandler}
+              updateHandler={updateHandler}
             />
           </Stack>
         </Box>
