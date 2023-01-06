@@ -1,7 +1,7 @@
 import { TBody, Th, Tr, Td } from '@twilio-paste/core';
 
-import RemoveExtIcon from '../Icons/RemoveExtIcon';
-import EditExtIcon from '../Icons/EditExtIcon';
+import RemoveExtIcon from './Icons/RemoveExtIcon';
+import EditExtIcon from './Icons/EditExtIcon';
 
 const TableBody = ({
   agentExtensions,

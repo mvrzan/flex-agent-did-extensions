@@ -6,7 +6,6 @@ import {
   TBody,
   Th,
   Tr,
-  Flex,
   Input,
   Tooltip,
   Separator,
@@ -30,9 +29,13 @@ const NewExtensionSidePanel = props => {
   const [selectedWorker, setSelectedWorker] = useState(null);
   const [agentName, setAgentName] = useState('');
   const [workerSid, setWorkerSid] = useState('');
+  const [isVisible, setIsVisible] = useState(false);
 
   const changeHandler = event => {
     setAgentExtension(event.target.value);
+    // if (isNaN(event.target.value)) {
+    //   setIsVisible(false);
+    // }
   };
 
   const getAgents = (query = '') => {
@@ -126,6 +129,18 @@ const NewExtensionSidePanel = props => {
   };
 
   useEffect(() => {
+    if (agentExtension && selectedWorker) {
+      setIsVisible(true);
+    }
+    if (!agentExtension || !selectedWorker) {
+      setIsVisible(false);
+    }
+    if (isNaN(agentExtension)) {
+      setIsVisible(false);
+    }
+  }, [agentExtension, selectedWorker]);
+
+  useEffect(() => {
     getAgents();
   }, []);
 
@@ -171,11 +186,13 @@ const NewExtensionSidePanel = props => {
               <Th>
                 <Input
                   id="agentExtension"
+                  type="number"
+                  placeholder="Enter a 4-digit number"
                   value={agentExtension}
                   defaultValue={props.agentExt}
                   onChange={changeHandler}
                   onClick={changeHandler}
-                  // hasError={agentExtension === '' || isNaN(agentExtension)}
+                  hasError={isNaN(agentExtension)}
                 />
               </Th>
             </Tr>
@@ -187,6 +204,7 @@ const NewExtensionSidePanel = props => {
                 <Input
                   disabled
                   id="workerSid"
+                  placeholder="Auto-populated"
                   value={workerSid == '' ? props.workerSid : workerSid}
                   defaultValue={props.workerSid}
                 />
@@ -200,6 +218,7 @@ const NewExtensionSidePanel = props => {
             <SaveButton
               saveAgentExtHandler={saveAgentExtHandler}
               syncEmpty={props.syncEmpty}
+              isVisible={isVisible}
             />
           </Stack>
         </Box>

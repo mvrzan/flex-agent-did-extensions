@@ -86,6 +86,14 @@ Implement sorting of the existing records in the UI.
 
 Allow users to search for specific agent and/or extension in the UI.
 
+### ~~Convert to functional components~~
+
+~~This version of the plugin is built using React class-based components. In order to follow more modern React development practices, this plugin should be converted to functional components.~~
+
+### ~~Input field validation~~
+
+~~Ensure users can only enter numbers into the agent extension input field.~~
+
 ## Development
 
 Run `twilio flex:plugins --help` to see all the commands we currently support. For further details on Flex Plugins refer to our documentation on the [Twilio Docs](https://www.twilio.com/docs/flex/developer/plugins/cli) page.
