@@ -92,11 +92,9 @@ const AgentExtensionsView = () => {
         <NewExtensionSidePanel
           clickHandler={hideSidePanelHandler}
           updateHandler={getAgentExtHandler}
-          agentName={agentInfo.agentName}
-          agentExt={agentInfo.agentExt}
-          workerSid={agentInfo.workerSid}
-          mapKey={agentInfo.mapKey}
-          mapItems={agentExtensions}
+          configuredAgentName={agentInfo.agentName}
+          configuredAgentExt={agentInfo.agentExt}
+          configuredWorkerSid={agentInfo.workerSid}
           syncEmpty={noValuesHandler}
         />
       )}

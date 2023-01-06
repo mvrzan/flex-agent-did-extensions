@@ -22,8 +22,14 @@ import SaveButton from './Buttons/SaveButton';
 
 const SYNC_CLIENT = Manager.getInstance();
 
-// props.agentExt
-const NewExtensionSidePanel = props => {
+const NewExtensionSidePanel = ({
+  clickHandler,
+  updateHandler,
+  syncEmpty,
+  configuredAgentExt,
+  configuredAgentName,
+  configuredWorkerSid,
+}) => {
   const [agentExtension, setAgentExtension] = useState();
   const [agents, setAgents] = useState([]);
   const [inputText, setInputText] = useState('');
@@ -90,10 +96,10 @@ const NewExtensionSidePanel = props => {
 
   const saveAgentExtHandler = async () => {
     const mapName = process.env.REACT_APP_SYNC_MAP_NAME;
-    const checkAgentName = agentName === '' ? props.agentName : agentName;
+    const checkAgentName = agentName === '' ? configuredAgentName : agentName;
     const checkAgentExtension =
-      agentExtension === '' ? props.agentExt : agentExtension;
-    const checkWorkerSid = workerSid === '' ? props.workerSid : workerSid;
+      agentExtension === '' ? configuredAgentExt : agentExtension;
+    const checkWorkerSid = workerSid === '' ? configuredWorkerSid : workerSid;
     const mapKey = checkWorkerSid;
 
     let mapValue = {
@@ -120,10 +126,10 @@ const NewExtensionSidePanel = props => {
     Notifications.showNotification('extensionUpdatedSuccessfully');
 
     // update syncEmpty state because sync is no longer empty
-    props.syncEmpty();
+    syncEmpty();
 
-    props.clickHandler();
-    props.updateHandler();
+    clickHandler();
+    updateHandler();
   };
 
   useEffect(() => {
@@ -136,18 +142,18 @@ const NewExtensionSidePanel = props => {
     if (isNaN(agentExtension)) {
       setIsVisible(false);
     }
-    if (props.agentExt) {
+    if (configuredAgentExt) {
       setIsVisible(true);
     }
-  }, [agentExtension, selectedWorker, props.agentExt]);
+  }, [agentExtension, selectedWorker, configuredAgentExt]);
 
   useEffect(() => {
-    setAgentExtension(props.agentExt);
-  }, [props.agentExt]);
+    setAgentExtension(configuredAgentExt);
+  }, [configuredAgentExt]);
 
   useEffect(() => {
-    setWorkerSid(props.workerSid);
-  }, [props.workerSid]);
+    setWorkerSid(configuredWorkerSid);
+  }, [configuredWorkerSid]);
 
   useEffect(() => {
     getAgents();
@@ -157,7 +163,7 @@ const NewExtensionSidePanel = props => {
     <SidePanel
       displayName="New Agent Extension"
       title={<div>New Agent Extension</div>}
-      handleCloseClick={props.clickHandler}
+      handleCloseClick={clickHandler}
     >
       <Stack orientation="vertical" spacing="space10">
         <Table variant="borderless">
@@ -168,7 +174,7 @@ const NewExtensionSidePanel = props => {
             </Tr>
           </THead>
           <TBody>
-            <Tr key={`${props.agentName} agentName`}>
+            <Tr key={`${configuredAgentName} agentName`}>
               <Tooltip text="Search for the name of the Agent that is going to use the phone number extension.">
                 <Th width="size10">Agent Name</Th>
               </Tooltip>
@@ -182,13 +188,15 @@ const NewExtensionSidePanel = props => {
                     onChange={changeQueryHandler}
                     onInputChange={inputChangeHandler}
                     options={agents}
-                    inputValue={inputText === '' ? props.agentName : inputText}
+                    inputValue={
+                      inputText === '' ? configuredAgentName : inputText
+                    }
                     value={selectedWorker || null}
                   />
                 </FormControl>
               </Th>
             </Tr>
-            <Tr key={`${props.agentExt} agentExtension`}>
+            <Tr key={`${configuredAgentExt} agentExtension`}>
               <Tooltip text="Enter a numerical agent extension of your choice.">
                 <Th>Agent Extension</Th>
               </Tooltip>
@@ -198,14 +206,14 @@ const NewExtensionSidePanel = props => {
                   type="number"
                   placeholder="Enter a 4-digit number"
                   value={agentExtension}
-                  defaultValue={props.agentExt}
+                  defaultValue={configuredAgentExt}
                   onChange={changeHandler}
                   onClick={changeHandler}
                   hasError={isNaN(agentExtension)}
                 />
               </Th>
             </Tr>
-            <Tr key={`${props.workerSid} workerSid`}>
+            <Tr key={`${configuredWorkerSid} workerSid`}>
               <Tooltip text="The agents identifier (worker SID) is going to be automatically populated.">
                 <Th>Worker SID</Th>
               </Tooltip>
@@ -214,8 +222,8 @@ const NewExtensionSidePanel = props => {
                   disabled
                   id="workerSid"
                   placeholder="Auto-populated"
-                  value={workerSid == '' ? props.workerSid : workerSid}
-                  defaultValue={props.workerSid}
+                  value={workerSid == '' ? configuredWorkerSid : workerSid}
+                  defaultValue={configuredWorkerSid}
                 />
               </Th>
             </Tr>
@@ -223,10 +231,10 @@ const NewExtensionSidePanel = props => {
         </Table>
         <Box padding="space40">
           <Stack orientation="horizontal" spacing="space30">
-            <CancelButton clickHandler={props.clickHandler} />
+            <CancelButton clickHandler={clickHandler} />
             <SaveButton
               saveAgentExtHandler={saveAgentExtHandler}
-              syncEmpty={props.syncEmpty}
+              syncEmpty={syncEmpty}
               isVisible={isVisible}
             />
           </Stack>
