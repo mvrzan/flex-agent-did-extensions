@@ -41,6 +41,7 @@ const NewExtensionSidePanel = ({
     setAgentExtension(event.target.value);
   };
 
+
   const getAgents = async (query = '') => {
     try {
       const instantQuery = await SYNC_CLIENT.insightsClient.instantQuery(

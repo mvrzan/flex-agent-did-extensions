@@ -9,6 +9,7 @@ import EmptyView from '../EmptyView/EmptyView';
 import TableHeader from '../Table/TableHeader';
 import AgentList from '../Table/AgentList';
 
+
 const AgentExtensionsView = () => {
   const [agentExtensions, setAgentExtensions] = useState([]);
   const [isNewExtButtonVisible, setIsNewExtButtonVisible] = useState(true);
@@ -80,6 +81,7 @@ const AgentExtensionsView = () => {
           />
           {isLoadingScreenVisible && <LoadingScreen />}
           {noValues && <EmptyView />}
+
           <AgentList
             agentExtensions={agentExtensions}
             updateAgentExtensions={getAgentExtHandler}
