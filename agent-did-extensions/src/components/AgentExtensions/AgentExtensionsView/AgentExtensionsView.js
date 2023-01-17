@@ -7,7 +7,8 @@ import NewExtensionSidePanel from '../../NewExtension/SidePanel/NewExtensionSide
 import EmptyView from '../EmptyView/EmptyView';
 
 import TableHeader from '../Table/TableHeader';
-import TableBody from '../Table/TableBody';
+import AgentList from '../Table/AgentList';
+
 
 const AgentExtensionsView = () => {
   const [agentExtensions, setAgentExtensions] = useState([]);
@@ -80,7 +81,8 @@ const AgentExtensionsView = () => {
           />
           {isLoadingScreenVisible && <LoadingScreen />}
           {noValues && <EmptyView />}
-          <TableBody
+
+          <AgentList
             agentExtensions={agentExtensions}
             updateAgentExtensions={getAgentExtHandler}
             sidePanelHandler={sidePanelHandler}

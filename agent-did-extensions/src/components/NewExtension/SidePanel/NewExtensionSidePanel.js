@@ -41,31 +41,41 @@ const NewExtensionSidePanel = ({
     setAgentExtension(event.target.value);
   };
 
-  const getAgents = (query = '') => {
-    SYNC_CLIENT.insightsClient.instantQuery('tr-worker').then(q => {
-      q.on('searchResult', items => {
-        const responseWorkers = Object.keys(items).map(
-          workerSid => items[workerSid]
-        );
 
-        setAgents(
-          responseWorkers
-            .map(worker => {
-              const { contact_uri, full_name } = worker.attributes;
-              const workersid = worker.worker_sid;
+  const getAgents = async (query = '') => {
+    try {
+      const instantQuery = await SYNC_CLIENT.insightsClient.instantQuery(
+        'tr-worker'
+      );
+      const promise = new Promise(resolve => {
+        instantQuery.on('searchResult', items => {
+          const responseWorkers = Object.keys(items).map(
+            workerSid => items[workerSid]
+          );
+          resolve(responseWorkers);
+          setAgents(
+            responseWorkers
+              .map(worker => {
+                const { contact_uri, full_name } = worker.attributes;
+                const workersid = worker.worker_sid;
 
-              return {
-                label: full_name,
-                value: contact_uri,
-                workersid: workersid,
-              };
-            })
-            .filter(elem => elem)
-        );
+                return {
+                  label: full_name,
+                  value: contact_uri,
+                  workersid: workersid,
+                };
+              })
+              .filter(elem => elem)
+          );
+        });
       });
 
-      q.search(`${query !== '' ? `${query}` : ''}`);
-    });
+      void instantQuery.search(`${query !== '' ? `${query}` : ''}`);
+
+      return promise;
+    } catch (error) {
+      console.log('ERROR', error);
+    }
   };
 
   const inputChangeHandler = event => {
@@ -74,6 +84,7 @@ const NewExtensionSidePanel = ({
 
     if (event !== '') {
       setSelectedWorker(null);
+      return;
     }
   };
 
@@ -110,11 +121,8 @@ const NewExtensionSidePanel = ({
 
   useEffect(() => {
     setAgentExtension(configuredAgentExt);
-  }, [configuredAgentExt]);
-
-  useEffect(() => {
     setWorkerSid(configuredWorkerSid);
-  }, [configuredWorkerSid]);
+  }, [configuredAgentExt, configuredWorkerSid]);
 
   useEffect(() => {
     getAgents();
@@ -183,7 +191,7 @@ const NewExtensionSidePanel = ({
                   disabled
                   id="workerSid"
                   placeholder="Auto-populated"
-                  value={workerSid == '' ? configuredWorkerSid : workerSid}
+                  value={workerSid === '' ? configuredWorkerSid : workerSid}
                   defaultValue={configuredWorkerSid}
                 />
               </Th>
