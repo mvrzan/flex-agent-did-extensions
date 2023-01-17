@@ -78,12 +78,12 @@ const NewExtensionSidePanel = ({
   };
 
   const inputChangeHandler = event => {
-    setInputText(event);
-    workersListUpdateHandler(event);
-
     if (event !== '') {
       setSelectedWorker(null);
+      return;
     }
+    setInputText(event);
+    workersListUpdateHandler(event);
   };
 
   const changeQueryHandler = event => {
