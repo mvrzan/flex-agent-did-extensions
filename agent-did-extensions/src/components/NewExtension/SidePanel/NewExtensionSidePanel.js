@@ -41,31 +41,40 @@ const NewExtensionSidePanel = ({
     setAgentExtension(event.target.value);
   };
 
-  const getAgents = (query = '') => {
-    SYNC_CLIENT.insightsClient.instantQuery('tr-worker').then(q => {
-      q.on('searchResult', items => {
-        const responseWorkers = Object.keys(items).map(
-          workerSid => items[workerSid]
-        );
+  const getAgents = async (query = '') => {
+    try {
+      const instantQuery = await SYNC_CLIENT.insightsClient.instantQuery(
+        'tr-worker'
+      );
+      const promise = new Promise(resolve => {
+        instantQuery.on('searchResult', items => {
+          const responseWorkers = Object.keys(items).map(
+            workerSid => items[workerSid]
+          );
+          resolve(responseWorkers);
+          setAgents(
+            responseWorkers
+              .map(worker => {
+                const { contact_uri, full_name } = worker.attributes;
+                const workersid = worker.worker_sid;
 
-        setAgents(
-          responseWorkers
-            .map(worker => {
-              const { contact_uri, full_name } = worker.attributes;
-              const workersid = worker.worker_sid;
-
-              return {
-                label: full_name,
-                value: contact_uri,
-                workersid: workersid,
-              };
-            })
-            .filter(elem => elem)
-        );
+                return {
+                  label: full_name,
+                  value: contact_uri,
+                  workersid: workersid,
+                };
+              })
+              .filter(elem => elem)
+          );
+        });
       });
 
-      q.search(`${query !== '' ? `${query}` : ''}`);
-    });
+      void instantQuery.search(`${query !== '' ? `${query}` : ''}`);
+
+      return promise;
+    } catch (error) {
+      console.log('ERROR', error);
+    }
   };
 
   const inputChangeHandler = event => {
