@@ -110,11 +110,8 @@ const NewExtensionSidePanel = ({
 
   useEffect(() => {
     setAgentExtension(configuredAgentExt);
-  }, [configuredAgentExt]);
-
-  useEffect(() => {
     setWorkerSid(configuredWorkerSid);
-  }, [configuredWorkerSid]);
+  }, [configuredAgentExt, configuredWorkerSid]);
 
   useEffect(() => {
     getAgents();
@@ -183,7 +180,7 @@ const NewExtensionSidePanel = ({
                   disabled
                   id="workerSid"
                   placeholder="Auto-populated"
-                  value={workerSid == '' ? configuredWorkerSid : workerSid}
+                  value={workerSid === '' ? configuredWorkerSid : workerSid}
                   defaultValue={configuredWorkerSid}
                 />
               </Th>

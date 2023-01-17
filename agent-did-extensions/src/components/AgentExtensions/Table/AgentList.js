@@ -3,7 +3,7 @@ import { TBody, Th, Tr, Td } from '@twilio-paste/core';
 import RemoveExtIcon from './Icons/RemoveExtIcon';
 import EditExtIcon from './Icons/EditExtIcon';
 
-const TableBody = ({
+const AgentList = ({
   agentExtensions,
   updateAgentExtensions,
   sidePanelHandler,
@@ -44,4 +44,4 @@ const TableBody = ({
   );
 };
 
-export default TableBody;
+export default AgentList;
