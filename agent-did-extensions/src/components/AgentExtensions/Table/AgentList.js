@@ -1,4 +1,4 @@
-import { TBody, Th, Tr, Td } from '@twilio-paste/core';
+import { TBody, Tr, Td } from '@twilio-paste/core';
 
 import RemoveExtIcon from './Icons/RemoveExtIcon';
 import EditExtIcon from './Icons/EditExtIcon';
@@ -14,16 +14,10 @@ const AgentList = ({
       {agentExtensions.map(mapItem => {
         return (
           <Tr key={mapItem.mapKey}>
-            <Th>
-              <Td>{mapItem.workerFullName}</Td>
-            </Th>
-            <Th>
-              <Td>{mapItem.extensionNumber}</Td>
-            </Th>
-            <Th>
-              <Td>{mapItem.workerSid}</Td>
-            </Th>
-            <Th>
+            <Td>{mapItem.workerFullName}</Td>
+            <Td>{mapItem.extensionNumber}</Td>
+            <Td> {mapItem.workerSid}</Td>
+            <Td>
               <RemoveExtIcon
                 mapKey={mapItem.mapKey}
                 updateAgentExtensions={updateAgentExtensions}
@@ -36,7 +30,7 @@ const AgentList = ({
                 sidePanelHandler={sidePanelHandler}
                 setAgentInfo={setAgentInfo}
               />
-            </Th>
+            </Td>
           </Tr>
         );
       })}

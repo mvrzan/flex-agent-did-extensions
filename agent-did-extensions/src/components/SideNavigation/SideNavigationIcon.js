@@ -14,7 +14,10 @@ const SideNavigationIcon = ({ activeView }) => {
       iconActive="DirectoryBold"
       onClick={navigateHandler}
       isActive={activeView === 'agent-extensions-view'}
-    />
+      key="MyCustomPageSideLink"
+    >
+      Agent DID Extensions
+    </SideLink>
   );
 };
 

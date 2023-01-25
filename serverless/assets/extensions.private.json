@@ -1,0 +1,17 @@
+[
+  {
+    "workerFullName": "EXAMPLE EXTENSIONS",
+    "extensionNumber": "000000",
+    "workerSid": "Update manually or redeploy with a proper JSON file."
+  },
+  {
+    "workerFullName": "John Doe",
+    "extensionNumber": "123456",
+    "workerSid": "WK1xxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "workerFullName": "Jane Doe",
+    "extensionNumber": "654321",
+    "workerSid": "WK2xxxxxxxxxxxxxxxxxxx"
+  }
+]

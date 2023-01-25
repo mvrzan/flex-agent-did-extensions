@@ -1,8 +1,14 @@
 import { Button } from '@twilio-paste/core';
 
-const CancelButton = ({ clickHandler }) => {
+const CancelButton = ({ clickHandler, updateHandler }) => {
   return (
-    <Button onClick={clickHandler} roundCorners={false}>
+    <Button
+      onClick={() => {
+        clickHandler();
+        updateHandler();
+      }}
+      roundCorners={false}
+    >
       Cancel
     </Button>
   );

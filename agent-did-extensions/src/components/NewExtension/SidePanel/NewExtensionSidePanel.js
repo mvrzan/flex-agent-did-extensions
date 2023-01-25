@@ -41,7 +41,6 @@ const NewExtensionSidePanel = ({
     setAgentExtension(event.target.value);
   };
 
-
   const getAgents = async (query = '') => {
     try {
       const instantQuery = await SYNC_CLIENT.insightsClient.instantQuery(
@@ -200,7 +199,10 @@ const NewExtensionSidePanel = ({
         </Table>
         <Box padding="space40">
           <Stack orientation="horizontal" spacing="space30">
-            <CancelButton clickHandler={clickHandler} />
+            <CancelButton
+              clickHandler={clickHandler}
+              updateHandler={updateHandler}
+            />
             <SaveButton
               syncEmpty={syncEmpty}
               isVisible={isVisible}

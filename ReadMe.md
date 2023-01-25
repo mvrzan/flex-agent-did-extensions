@@ -86,6 +86,10 @@ Implement sorting of the existing records in the UI.
 
 Allow users to search for specific agent and/or extension in the UI.
 
+### Updated by and last updated
+
+Insert two new columns that indicate when the filed was updated and by whom.
+
 ### ~~Convert to functional components~~
 
 ~~This version of the plugin is built using React class-based components. In order to follow more modern React development practices, this plugin should be converted to functional components.~~
