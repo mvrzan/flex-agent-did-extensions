@@ -36,12 +36,13 @@ exports.handler = TokenValidator(async function publish(
 
   const { buildSid, TokenResult } = event;
 
-  if (TokenResult.roles.indexOf('admin') < 0) {
-    response.setStatusCode(403);
-    response.setBody('Not authorized');
-    callback(null, response);
-    return;
-  }
+  // include this if you want to limit your plugin to admins only
+  // if (TokenResult.roles.indexOf('admin') < 0) {
+  //   response.setStatusCode(403);
+  //   response.setBody('Not authorized');
+  //   callback(null, response);
+  //   return;
+  // }
 
   try {
     // create deployment for this build

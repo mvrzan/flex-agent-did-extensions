@@ -10,23 +10,35 @@ Twilio Flex Plugins allow you to customize the appearance and behavior of [Twili
 
 The _Agent DID Extensions Plugin_ allows customers to call a Flex agent directly with the help of an extension. It also enables supervisors to create, read, update, and delete agent extensions assigned to agents directly in the Flex UI.
 
-Read agent extensions from the Sync Map.
+From the Flex Supervisor view, agent extensions are loaded from a [Twilio Sync](https://www.twilio.com/sync/api) service. This enables a responsive user experience that provides immediate feedback.
 
-<img width="700px" src="./screenshots/agent-did-extensions-flexui.png"/>
+Read agent extensions:
 
-Create a new agent extensions directly into the Sync Map.
+<img width="700px" src="./screenshots/read_agent_extensions.png"/>
 
-![](./screenshots/add-extension.gif)
+This view allows supervisors to create new agent extensions from the UI:
 
-Update an existing agent extension.
+![](./screenshots/add_agent_extension.gif)
 
-![](./screenshots/update-extension.gif)
+The plugin also enables supervisors to update an existing agent extension:
 
-Delete an existing agent extension.
+![](./screenshots/update_agent_extension.gif)
 
-![](./screenshots/delete-extension.gif)
+And last, but not least, supervisors can delete an existing agent extension:
 
-#### Example of Sync Map JSON structure
+![](./screenshots/delete_agent_extension.gif)
+
+## How are the agent extensions available to customers within the Studio Flow?
+
+Once the supervisor has made all the desired changes in the UI, a Publish Extensions button will be enabled on the UI. This button is going to take the JSON file from the Sync Map and initiate a Twilio serverless build process where it will then be deployed as a [Twilio Asset](https://www.twilio.com/docs/serverless/functions-assets/assets).
+
+This is what the publish process looks like:
+
+![](./screenshots/publish_agent_extensions.gif)
+
+Now that the agent extensions have been deployed to Twilio Assets, they are used in the Studio Flow by a Twilio serverless function that is going to search for the right agent within the JSON file and pass that information to the task router. This allows the plugin to scale and not to be limited by the Sync Map RPS limitations.
+
+The Flex UI for this component is using Sync Map to enable a responsive use experience. Here is an example of the Sync Map JSON structure:
 
 ```
 {
@@ -40,7 +52,7 @@ Delete an existing agent extension.
 
 The below architectural diagram is a representation of involved Twilio services when a customer makes a call and enters agent's extension:
 
-<img width="700px" src="./screenshots/Agent-DID-Extensions.png"/>
+<img width="700px" src="./screenshots/agent_extensions_diagram.png"/>
 
 ## TaskRouter Workflow setup
 
@@ -70,7 +82,7 @@ This plugin is using the Sync [JavaScript SDK](https://media.twiliocdn.com/sdk/j
 
 #### Supported Flex version
 
-This plugin only supports Twilio Flex v2.x. For Twilio Flex v1.x please check the plugin-v1 folder. Please note that the v1.x lacks features compared to this version.
+This plugin only supports Twilio Flex v2.x.
 
 ## ToDo List
 
@@ -155,8 +167,15 @@ Edit `.env` and set these variables with the Sids from your account.
 
 ```bash
 # The following values are example references only
+FLEX_APP_FUNCTIONS_BASE=
 FLEX_SYNC_SERVICE_SID=ISxxxxxxxxxxxxxxxxxxxx
 FLEX_SYNC_MAP_SID=MPxxxxxxxxxxxxxxxxxxxx
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=
+TWILIO_SERVICE_RETRY_LIMIT=5
+TWILIO_SERVICE_MIN_BACKOFF=100
+TWILIO_SERVICE_MAX_BACKOFF=300
+TWILIO_ASSET_NAME=/extensions.json
 ```
 
 Next, deploy the Serverless functions:
@@ -166,6 +185,10 @@ cd serverless
 twilio serverless:deploy
 
 ```
+
+**Note**: If you need to re-deploy the serverless functions, they will re-deploy whatever agent extensions JSON file lives in the source control. This means you will lose all of the changes from Sync Map. Once you've deployed the serverless functions, simply publish the changes from the UI.
+
+Additional option is to create a script to fetch the lates JSON file directly from Sync Map and include that as your build artifact.
 
 After successfully deploying your function, you should see at least the following:
 
@@ -195,6 +218,8 @@ cp .env.example .env
 ```
 
 Edit `.env` and set the `FLEX_APP_FUNCTIONS_BASE` variable to your Twilio Functions base URL (like https://xxx-serverless-xxxx-dev.twil.io/).
+
+Also make sure to set the `REACT_APP_SYNC_MAP_NAME` variable to the name of your Sync Map.
 
 To run the plugin locally, you can use the Twilio Flex CLI plugin. Using your command line, run the following from the root directory of the plugin.
 
@@ -266,6 +291,13 @@ To deploy your plugin to specific accounts/environments use these commands:
 `twilio flex:plugins:deploy --profile:StageProfileName`
 
 `twilio flex:plugins:deploy --profile:ProdProfileName`
+
+## Preventing conflicting configuration updates
+
+The Flex plugin loads the configuration interface for supervisor, of which there may be more than one. Therefore, it is a possibility that multiple people may attempt to update the extensions asset at the same time. To prevent workers overwriting each other's changes, a few guards have been put in place:
+
+- When updating configuration with the `admin/update` function, the `version` property must be provided with the same `version` that was retrieved from the `admin/list` function which loaded the initial data. If this does not match, the request will fail. In the user interface, the following alert will be shown: `Routes were updated by someone else and cannot be published. Please reload and try again.` This allows the worker to rescue the changes they were attempting to make, and merge them with the changes that were saved first.
+- When retrieving configuration from this `admin/list` function, a check is made that the latest build is what is deployed. The `versionIsDeployed` property is returned indicating whether this is the case. If it is not, this means another user is in the middle of publishing changes. In the user interface, the following alert will be shown: `Another route publish is in progress. Publishing now will overwrite other changes.` This allows the worker to wait for the publish to complete before making changes.
 
 ## License
 
