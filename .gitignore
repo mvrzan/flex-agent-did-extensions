@@ -74,5 +74,8 @@ package-lock.json
 # Prettier config
 .prettierrc
 
+# ESLint config
+.eslintrc
+
 # macOs file
 .DS_Store

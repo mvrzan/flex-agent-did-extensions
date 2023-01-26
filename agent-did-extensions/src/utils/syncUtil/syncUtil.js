@@ -52,7 +52,7 @@ export default class SyncHelper {
       });
     });
     return paginator.hasNextPage
-      ? paginator.nextPage().then(pageHandler)
+      ? this.pageHandler(paginator.nextPage())
       : items;
   }
 
@@ -87,9 +87,8 @@ export default class SyncHelper {
 
   static async updateMapItem(mapName, mapKey, data) {
     try {
-      console.log(mapName, mapKey, data);
       const map = await SYNC_CLIENT.map(mapName);
-      const update = await map.update(mapKey, data);
+      await map.update(mapKey, data);
     } catch (error) {
       console.error(error);
       return {};
