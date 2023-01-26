@@ -94,22 +94,4 @@ export default class SyncHelper {
       return {};
     }
   }
-  // static async getAllMapItems(mapName) {
-  //   try {
-  //     SYNC_CLIENT.map(mapName).then(function (map) {
-  //       map.getItems().then(function (page) {
-  //         console.log(page.items);
-  //         const mapItems = page.items.find(item => item.descriptor.data);
-  //         console.log(mapItems);
-  //         // console.log(
-  //         //   page.items.forEach(item => {
-  //         //     return item.descriptor.data;
-  //         //   })
-  //         // );
-  //       });
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
 }

@@ -10,7 +10,6 @@ exports.handler = TokenValidator(async function list(context, event, callback) {
   response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS GET');
   response.appendHeader('Content-Type', 'application/json');
   response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
-  response.appendHeader('access-control-request-headers: content-type');
 
   const assetPath = process.env.TWILIO_ASSET_NAME;
 

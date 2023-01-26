@@ -71,7 +71,7 @@ export default class ConfigManagerService extends ApiService {
     };
 
     const response = await this.fetchJsonWithReject(
-      `https://agent-did-extensions-1863-dev.twil.io/admin/list`,
+      `${process.env.REACT_APP_FUNCTIONS_BASE}/admin/list`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -92,17 +92,14 @@ export default class ConfigManagerService extends ApiService {
       Token: manager.user.token,
     };
 
-    console.log('params', params);
     const response = await this.fetchJsonWithReject(
-      `https://agent-did-extensions-1863-dev.twil.io/admin/update`,
+      `${process.env.REACT_APP_FUNCTIONS_BASE}/admin/update`,
       {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(params),
       }
     );
-
-    console.log(response);
 
     return {
       ...response,
@@ -118,7 +115,7 @@ export default class ConfigManagerService extends ApiService {
     };
 
     const response = await this.fetchJsonWithReject(
-      `https://agent-did-extensions-1863-dev.twil.io/admin/update-status`,
+      `${process.env.REACT_APP_FUNCTIONS_BASE}/admin/update-status`,
       {
         method: 'post',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -138,7 +135,7 @@ export default class ConfigManagerService extends ApiService {
     };
 
     const response = await this.fetchJsonWithReject(
-      `https://agent-did-extensions-1863-dev.twil.io/admin/publish`,
+      `${process.env.REACT_APP_FUNCTIONS_BASE}/admin/publish`,
       {
         method: 'post',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
