@@ -46,32 +46,29 @@ const NewExtensionSidePanel = ({
       const instantQuery = await SYNC_CLIENT.insightsClient.instantQuery(
         'tr-worker'
       );
-      const promise = new Promise(resolve => {
-        instantQuery.on('searchResult', items => {
-          const responseWorkers = Object.keys(items).map(
-            workerSid => items[workerSid]
-          );
-          resolve(responseWorkers);
-          setAgents(
-            responseWorkers
-              .map(worker => {
-                const { contact_uri, full_name } = worker.attributes;
-                const workersid = worker.worker_sid;
 
-                return {
-                  label: full_name,
-                  value: contact_uri,
-                  workersid: workersid,
-                };
-              })
-              .filter(elem => elem)
-          );
-        });
+      instantQuery.on('searchResult', items => {
+        const responseWorkers = Object.keys(items).map(
+          workerSid => items[workerSid]
+        );
+
+        setAgents(
+          responseWorkers
+            .map(worker => {
+              const { contact_uri, full_name } = worker.attributes;
+              const workersid = worker.worker_sid;
+
+              return {
+                label: full_name,
+                value: contact_uri,
+                workersid: workersid,
+              };
+            })
+            .filter(elem => elem)
+        );
       });
 
-      void instantQuery.search(`${query !== '' ? `${query}` : ''}`);
-
-      return promise;
+      instantQuery.search(`${query !== '' ? `${query}` : ''}`);
     } catch (error) {
       console.log('ERROR', error);
     }
