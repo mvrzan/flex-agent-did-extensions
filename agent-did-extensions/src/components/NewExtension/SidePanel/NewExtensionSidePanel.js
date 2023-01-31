@@ -11,15 +11,14 @@ import {
   Separator,
   Box,
 } from '@twilio-paste/core';
-import { Manager, SidePanel } from '@twilio/flex-ui';
+import { SidePanel } from '@twilio/flex-ui';
 
 import FormControl from '@material-ui/core/FormControl';
 import Select from 'react-select';
 import { debounce } from 'lodash';
 import CancelButton from './Buttons/CancelButton';
 import SaveButton from './Buttons/SaveButton';
-
-const SYNC_CLIENT = Manager.getInstance();
+import instantQuerySearch from '../../../utils/instantQuerySearch/instantQuerySearch';
 
 const NewExtensionSidePanel = ({
   clickHandler,
@@ -43,32 +42,26 @@ const NewExtensionSidePanel = ({
 
   const getAgents = async (query = '') => {
     try {
-      const instantQuery = await SYNC_CLIENT.insightsClient.instantQuery(
-        'tr-worker'
+      const queryItems = await instantQuerySearch(
+        'tr-worker',
+        `${query !== '' ? `${query}` : ''}`
       );
 
-      instantQuery.on('searchResult', items => {
-        const responseWorkers = Object.keys(items).map(
-          workerSid => items[workerSid]
-        );
+      const responseWorkers = Object.keys(queryItems)
+        .map(workerSid => queryItems[workerSid])
+        .map(worker => {
+          const { contact_uri, full_name } = worker.attributes;
+          const workersid = worker.worker_sid;
 
-        setAgents(
-          responseWorkers
-            .map(worker => {
-              const { contact_uri, full_name } = worker.attributes;
-              const workersid = worker.worker_sid;
+          return {
+            label: full_name,
+            value: contact_uri,
+            workersid: workersid,
+          };
+        })
+        .filter(elem => elem);
 
-              return {
-                label: full_name,
-                value: contact_uri,
-                workersid: workersid,
-              };
-            })
-            .filter(elem => elem)
-        );
-      });
-
-      instantQuery.search(`${query !== '' ? `${query}` : ''}`);
+      setAgents(responseWorkers);
     } catch (error) {
       console.log('ERROR', error);
     }
