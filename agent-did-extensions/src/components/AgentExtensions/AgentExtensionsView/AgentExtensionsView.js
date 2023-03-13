@@ -172,18 +172,20 @@ const AgentExtensionsView = () => {
             />
           </Stack>
         </Box>
-        <ModalView isOpen={publishState === 1} />
-        <Table striped tableLayout="fixed">
-          <TableHeader />
-          {isLoadingScreenVisible && <LoadingScreen />}
-          {noValues && <EmptyView />}
-          <AgentList
-            agentExtensions={agentExtensions}
-            updateAgentExtensions={getSyncAgentExtHandler}
-            sidePanelHandler={sidePanelHandler}
-            setAgentInfo={setAgentInfo}
-          />
-        </Table>
+        <Box overflow="auto" maxHeight="500px">
+          <ModalView isOpen={publishState === 1} />
+          <Table striped tableLayout="fixed">
+            <TableHeader />
+            {isLoadingScreenVisible && <LoadingScreen />}
+            {noValues && <EmptyView />}
+            <AgentList
+              agentExtensions={agentExtensions}
+              updateAgentExtensions={getSyncAgentExtHandler}
+              sidePanelHandler={sidePanelHandler}
+              setAgentInfo={setAgentInfo}
+            />
+          </Table>
+        </Box>
       </Flex>
       {isSidePanelVisible && (
         <NewExtensionSidePanel
