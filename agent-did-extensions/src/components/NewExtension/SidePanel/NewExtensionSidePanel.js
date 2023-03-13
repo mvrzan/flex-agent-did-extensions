@@ -60,7 +60,7 @@ const NewExtensionSidePanel = ({
           };
         })
         .filter(elem => elem);
-      console.log(responseWorkers[0]);
+
       setAgents(responseWorkers);
     } catch (error) {
       console.log('ERROR', error);

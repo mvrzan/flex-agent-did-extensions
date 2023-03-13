@@ -19,7 +19,6 @@ const instantQuerySearch = async (index, query) => {
   });
 
   await instantQueryClient.search(query);
-  console.log(await queryPromise);
   return queryPromise;
 };
 
