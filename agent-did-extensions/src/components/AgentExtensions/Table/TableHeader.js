@@ -2,7 +2,7 @@ import { THead, Th, Tr } from '@twilio-paste/core';
 
 const TableHeader = () => {
   return (
-    <THead stickyHeader top={2}>
+    <THead stickyHeader top={0}>
       <Tr>
         <Th>Agent Name</Th>
         <Th>Agent Extension</Th>
