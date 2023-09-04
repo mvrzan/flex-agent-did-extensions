@@ -1,5 +1,5 @@
 <a  href="https://www.twilio.com">
-<img  src="https://static0.twilio.com/marketing/bundles/marketing/img/logos/wordmark-red.svg"  alt="Twilio"  width="250"  />
+<img  src="https://github.com/mvrzan/flex-keyboard-shortcuts/assets/53003989/5158eaee-9cef-4a8d-bf08-937a2286e04c"  alt="Twilio"  width="250"  />
 </a>
 
 # Agent DID Extensions Plugin - Flex 2.X
